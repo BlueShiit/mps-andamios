@@ -175,6 +175,44 @@ document.addEventListener("click", (e) => {
 })();
 
 // ============================
+// Algoritmo de cotización
+// ============================
+const PRICING = {
+  blitz: {
+    tramos: [
+      { hasta: 100,  precio: 4200 },
+      { hasta: 300,  precio: 3600 },
+      { hasta: 1000, precio: 3000 },
+      { hasta: 5000, precio: 2500 },
+    ],
+    unidad: "m²",
+  },
+  allround: {
+    tramos: [
+      { hasta: 2000,  precio: 380 },
+      { hasta: 10000, precio: 320 },
+      { hasta: 30000, precio: 260 },
+      { hasta: 50000, precio: 200 },
+    ],
+    unidad: "kg",
+  },
+};
+
+function calcularPrecio(tipo, cantidad) {
+  const config = PRICING[tipo];
+  if (!config || !cantidad || cantidad <= 0) return null;
+  const tramo = config.tramos.find(t => cantidad <= t.hasta) || config.tramos[config.tramos.length - 1];
+  const neto  = cantidad * tramo.precio;
+  const iva   = Math.round(neto * 0.19);
+  const total = neto + iva;
+  return { cantidad, unidad: config.unidad, precioUnitario: tramo.precio, neto, iva, total };
+}
+
+function formatCLP(n) {
+  return "$" + Math.round(n).toLocaleString("es-CL");
+}
+
+// ============================
 // Form helpers: autocomplete + validación inline
 // ============================
 (function initFormHelpers() {
@@ -404,8 +442,49 @@ document.addEventListener("click", (e) => {
       const v = Number(inp.value);
       const ok = v >= min && v <= max;
       setStatus(inp, ok ? "valid" : "invalid", ok ? "" : `Debe estar entre ${min.toLocaleString("es-CL")} y ${max.toLocaleString("es-CL")} ${unit}`);
+      actualizarCajaPrecio();
     });
   });
+
+  // --- Caja de precio estimado ---
+  const quoteActions = form.querySelector(".quote-actions");
+  const cajaPrecio = document.createElement("div");
+  cajaPrecio.id = "precio-estimado";
+  cajaPrecio.className = "precio-box";
+  cajaPrecio.hidden = true;
+  quoteActions?.parentElement.insertBefore(cajaPrecio, quoteActions);
+
+  const tipoSel = document.getElementById("tipo-andamio");
+  tipoSel?.addEventListener("change", actualizarCajaPrecio);
+
+  function actualizarCajaPrecio() {
+    const tipo = tipoSel?.value;
+    const cantidad = tipo === "blitz"
+      ? Number(document.getElementById("m2-blitz")?.value) || 0
+      : Number(document.getElementById("kg-allround")?.value) || 0;
+
+    const p = calcularPrecio(tipo, cantidad);
+    if (!p) { cajaPrecio.hidden = true; return; }
+
+    cajaPrecio.hidden = false;
+    cajaPrecio.innerHTML = `
+      <p class="precio-box-title">Estimación de precio</p>
+      <div class="precio-box-row">
+        <span>${p.cantidad.toLocaleString("es-CL")} ${p.unidad} × ${formatCLP(p.precioUnitario)}/${p.unidad}</span>
+        <span>${formatCLP(p.neto)}</span>
+      </div>
+      <div class="precio-box-row">
+        <span>IVA (19%)</span>
+        <span>${formatCLP(p.iva)}</span>
+      </div>
+      <hr class="precio-box-divider">
+      <div class="precio-box-total">
+        <span>Total estimado</span>
+        <span>${formatCLP(p.total)}</span>
+      </div>
+      <p class="precio-box-nota">Valor referencial neto + IVA. El precio final puede variar según altura, accesos y condiciones específicas de la obra.</p>
+    `;
+  }
 })();
 
 // ===== Reiniciar animaciones del texto en cada cambio de slide =====
@@ -639,7 +718,11 @@ quoteForm?.addEventListener("submit", async (e) => {
     telefono = prefijo + digits;
   }
 
-  // 4) Guardar en Supabase (tabla quotes/cotizaciones)
+  // 4) Calcular precio
+  const cantidad = tipo_andamio === "blitz" ? m2_blitz : kg_allround;
+  const precio = calcularPrecio(tipo_andamio, cantidad);
+
+  // 5) Guardar en Supabase (tabla quotes/cotizaciones)
   const res = await sendQuoteToSupabase({
     tipo_andamio,
     m2_blitz,
@@ -647,8 +730,12 @@ quoteForm?.addEventListener("submit", async (e) => {
     ciudad,
     direccion,
     empresa,
-    telefono, // guardamos normalizado
+    telefono,
     correo,
+    precio_unitario: precio?.precioUnitario ?? null,
+    precio_neto:     precio?.neto ?? null,
+    precio_iva:      precio?.iva ?? null,
+    precio_total:    precio?.total ?? null,
     created_at: new Date().toISOString(),
   });
 
@@ -693,6 +780,7 @@ try {
       empresa,
       telefono,
       correo,
+      precio,
     }),
   });
 } catch (e) {

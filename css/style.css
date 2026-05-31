@@ -2167,6 +2167,54 @@ form textarea:focus {
 }
 
 /* ============================
+   Caja precio estimado
+   ============================ */
+.precio-box {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 14px;
+}
+
+.precio-box-title {
+  margin: 0 0 10px;
+  font-weight: 700;
+  font-size: 0.9em;
+  color: #166534;
+}
+
+.precio-box-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875em;
+  color: #374151;
+  padding: 2px 0;
+}
+
+.precio-box-divider {
+  border: none;
+  border-top: 1px solid #86efac;
+  margin: 8px 0;
+}
+
+.precio-box-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.95em;
+  color: #166534;
+  padding: 2px 0;
+}
+
+.precio-box-nota {
+  margin: 10px 0 0;
+  font-size: 0.75em;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* ============================
    Autocomplete dirección
    ============================ */
 .field {
