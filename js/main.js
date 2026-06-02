@@ -529,11 +529,7 @@ const contactClose  = document.querySelector(".contact-close");
 const widgetForm    = document.getElementById("widget-form");
 const widgetMsg     = document.getElementById("w-msg");
 
-if (contactToggle && contactPanel) {
-  contactToggle.addEventListener("click", () => {
-    contactPanel.classList.toggle("is-open");
-  });
-}
+// contactToggle ahora es un enlace directo a WhatsApp — no necesita listener
 
 if (contactClose && contactPanel) {
   contactClose.addEventListener("click", () => {

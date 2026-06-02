@@ -497,8 +497,8 @@ form textarea:focus {
   border-radius: 20px;
   border: none;
 
-  background: var(--primario);
-  /* Azul MPS */
+  background: #25D366;
+  text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -519,7 +519,7 @@ form textarea:focus {
   inset: -10px;
   /* halo más grande */
   border-radius: inherit;
-  border: 3px solid rgba(10, 102, 194, 0.45);
+  border: 3px solid rgba(37, 211, 102, 0.5);
   opacity: 0;
   pointer-events: none;
   animation: contactHalo 2.8s ease-out 1.5s infinite;
@@ -567,8 +567,8 @@ form textarea:focus {
 }
 
 .contact-icon-svg {
-  width: 72px;
-  height: 72px;
+  width: 40px;
+  height: 40px;
   animation:
     iconBounce 4s ease-in-out 3s infinite,
     iconShake 6s ease-in-out 4s infinite;
@@ -631,9 +631,9 @@ form textarea:focus {
 }
 
 .contact-toggle:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.07);
   transform: scale(1.08);
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 16px 35px rgba(37, 211, 102, 0.4);
 }
 
 /* Panel */
@@ -2799,6 +2799,266 @@ body.modal-open {
   max-width: 60ch;
   margin: 0 auto;
   line-height: 1.65;
+}
+
+/* ============================
+   NOSOTROS — Quiénes somos
+   ============================ */
+.qs-section {
+  background: #fff;
+  border-bottom: 1px solid var(--borde);
+}
+
+.qs-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
+  align-items: start;
+}
+
+.qs-pretitle {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--primario);
+  margin-bottom: 12px;
+}
+
+.qs-title {
+  font-size: clamp(26px, 3.5vw, 38px);
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin: 0 0 24px;
+  line-height: 1.15;
+}
+
+.qs-para {
+  color: #334155;
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+
+.qs-quote {
+  background: #0f172a;
+  border-radius: 20px;
+  padding: 36px 32px;
+  position: relative;
+  margin: 0;
+}
+
+.qs-quote-mark {
+  display: block;
+  font-size: 72px;
+  line-height: 0.6;
+  color: var(--acento);
+  font-weight: 900;
+  margin-bottom: 16px;
+  font-family: Georgia, serif;
+}
+
+.qs-quote p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f1f5f9;
+  line-height: 1.65;
+  margin: 0 0 20px;
+}
+
+.qs-quote cite {
+  font-size: 13px;
+  color: #64748b;
+  font-style: normal;
+}
+
+.qs-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.qs-stat {
+  background: var(--gris);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 18px 12px;
+  text-align: center;
+}
+
+.qs-stat-num {
+  display: block;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--primario);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.qs-stat-lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+}
+
+@media (max-width: 900px) {
+  .qs-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* ============================
+   NOSOTROS — Secciones expandidas
+   ============================ */
+.nos-expanded {
+  background: var(--gris);
+}
+
+.nos-exp-item {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.nos-exp-item:last-child {
+  border-bottom: none;
+}
+
+.nos-exp-item:nth-child(even) {
+  background: #fff;
+}
+
+.nos-exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* En items con clase --alt, invertimos el orden visual en desktop */
+.nos-exp-item--alt .nos-exp-grid {
+  direction: rtl;
+}
+.nos-exp-item--alt .nos-exp-grid > * {
+  direction: ltr;
+}
+
+.nos-exp-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(10, 102, 194, 0.25);
+  flex-shrink: 0;
+}
+
+.nos-exp-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nos-exp-title {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  margin: 0 0 20px;
+}
+
+.nos-exp-para {
+  color: #334155;
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+
+.nos-exp-para:last-child {
+  margin-bottom: 0;
+}
+
+.nos-exp-highlight {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.07);
+  position: relative;
+  overflow: hidden;
+}
+
+.nos-exp-item:nth-child(even) .nos-exp-highlight {
+  background: var(--gris);
+}
+
+.nos-exp-highlight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--acento);
+}
+
+.nos-exp-highlight-text {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.55;
+  margin: 0 0 24px;
+  font-style: italic;
+}
+
+.nos-exp-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nos-exp-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.nos-exp-list li::before {
+  content: "✓";
+  font-weight: 900;
+  color: var(--primario);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+@media (max-width: 860px) {
+  .nos-exp-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .nos-exp-item--alt .nos-exp-grid {
+    direction: ltr;
+  }
+
+  .nos-exp-item {
+    padding: 56px 0;
+  }
 }
 
 /* ============================
