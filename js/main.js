@@ -659,6 +659,13 @@ btnCotizacion?.addEventListener("click", (e) => {
   abrirCotizacion();
 });
 
+document.querySelectorAll(".js-abrir-cotizacion").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    abrirCotizacion();
+  });
+});
+
 quoteBackdrop?.addEventListener("click", cerrarCotizacion);
 quoteClose?.addEventListener("click", cerrarCotizacion);
 quoteCancelar?.addEventListener("click", cerrarCotizacion);
@@ -917,5 +924,109 @@ try {
     if (e.key === "Escape") closeLightbox();
     if (e.key === "ArrowRight") showNextLightboxImage();
     if (e.key === "ArrowLeft") showPrevLightboxImage();
+  });
+})();
+
+// ============================
+// Tabs de servicios (servicios.html)
+// ============================
+(function () {
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabPanels = document.querySelectorAll(".tab-panel");
+  const tabsSelect = document.querySelector(".tabs-select");
+
+  if (!tabBtns.length) return;
+
+  function switchTab(tabName) {
+    tabBtns.forEach(btn => btn.classList.toggle("is-active", btn.dataset.tab === tabName));
+    tabBtns.forEach(btn => btn.setAttribute("aria-selected", btn.dataset.tab === tabName));
+    tabPanels.forEach(panel => panel.classList.toggle("is-active", panel.id === "tab-" + tabName));
+    if (tabsSelect) tabsSelect.value = tabName;
+  }
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+  if (tabsSelect) {
+    tabsSelect.addEventListener("change", () => switchTab(tabsSelect.value));
+  }
+})();
+
+// ============================
+// Filtro de proyectos (proyectos.html)
+// ============================
+(function () {
+  const filtros = document.querySelectorAll(".filtro-btn");
+  const cards = document.querySelectorAll(".proj-card");
+
+  if (!filtros.length) return;
+
+  filtros.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filtros.forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+
+      const filter = btn.dataset.filter;
+      cards.forEach(card => {
+        card.style.display = (filter === "todos" || card.dataset.tipo === filter) ? "" : "none";
+      });
+    });
+  });
+})();
+
+// ============================
+// Modal de detalle de proyecto (proyectos.html)
+// ============================
+(function () {
+  const projModal = document.getElementById("proj-modal");
+  const projBackdrop = document.getElementById("proj-modal-backdrop");
+  const projClose = document.getElementById("proj-modal-close");
+  const projImg = document.getElementById("proj-modal-img");
+  const projBadge = document.getElementById("proj-modal-badge");
+  const projTitle = document.getElementById("proj-modal-title");
+  const projLocation = document.getElementById("proj-modal-location");
+  const projDesc = document.getElementById("proj-modal-desc");
+
+  if (!projModal) return;
+
+  function openProjModal(data) {
+    projImg.src = data.img;
+    projImg.alt = data.title;
+    projBadge.textContent = data.badge;
+    projBadge.className = "proj-modal-badge " + data.tipo;
+    projTitle.textContent = data.title;
+    projLocation.textContent = "📍 " + data.location;
+    projDesc.textContent = data.desc;
+    projModal.classList.add("is-open");
+    projModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  }
+
+  function closeProjModal() {
+    projModal.classList.remove("is-open");
+    projModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+  }
+
+  document.querySelectorAll(".proj-card-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".proj-card");
+      openProjModal({
+        img: card.dataset.img,
+        title: card.dataset.title,
+        badge: card.dataset.badge,
+        tipo: card.dataset.tipo,
+        location: card.dataset.location,
+        desc: card.dataset.desc
+      });
+    });
+  });
+
+  projBackdrop?.addEventListener("click", closeProjModal);
+  projClose?.addEventListener("click", closeProjModal);
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && projModal?.classList.contains("is-open")) closeProjModal();
   });
 })();

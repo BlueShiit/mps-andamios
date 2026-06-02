@@ -32,148 +32,134 @@
 
   <main>
 
-    <!-- ===== ENCABEZADO PROYECTOS ===== -->
-    <section class="section" aria-labelledby="proyectos-title">
-      <div class="container" style="text-align:center;">
-        <h1 id="proyectos-title" style="margin:0; font-size:clamp(32px,4vw,54px); color:#ffb703;">
-          Proyectos
-        </h1>
-
-        <p class="lead" style="margin:14px auto 0; max-width:75ch;">
-          Revisa algunos de los trabajos desarrollados por <strong>MPS</strong> en montaje, desmontaje
-          y supervisión de andamios, ejecutados con foco en seguridad, planificación y cumplimiento en obra.
-        </p>
+    <!-- Hero pequeño -->
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <h1 class="page-hero-title">Proyectos</h1>
+        <p class="page-hero-sub">Trabajos ejecutados con foco en seguridad, planificación y cumplimiento en obras de la Región Metropolitana.</p>
       </div>
     </section>
 
-    <!-- ===== LISTADO DE PROYECTOS ===== -->
-    <section class="section" aria-label="Listado de proyectos">
+    <!-- Filtros y grilla -->
+    <section class="section" aria-label="Proyectos ejecutados">
       <div class="container">
-        <div class="projects-grid">
 
-          <!-- PROYECTO 1 -->
-          <article class="project-card">
-            <div class="project-gallery">
-              <button class="gallery-btn prev" type="button" aria-label="Imagen anterior">‹</button>
+        <!-- Filtros -->
+        <div class="proyectos-filtros" role="group" aria-label="Filtrar por tipo">
+          <button class="filtro-btn is-active" data-filter="todos">Todos</button>
+          <button class="filtro-btn" data-filter="montaje">Montaje</button>
+          <button class="filtro-btn" data-filter="desmontaje">Desmontaje</button>
+          <button class="filtro-btn" data-filter="supervision">Supervisión</button>
+        </div>
 
-              <div class="gallery-track">
-                <img src="assets/img/hero1.jpg" class="gallery-image active" alt="Montaje de andamios industriales - foto 1">
-                <img src="assets/img/hero2.jpg" class="gallery-image" alt="Montaje de andamios industriales - foto 2">
-                <img src="assets/img/hero3.jpg" class="gallery-image" alt="Montaje de andamios industriales - foto 3">
-              </div>
+        <!-- Grilla de proyectos -->
+        <div class="proyectos-grid" id="proyectos-grid">
 
-              <button class="gallery-btn next" type="button" aria-label="Imagen siguiente">›</button>
+          <!-- Proyecto 1: Montaje -->
+          <article class="proj-card reveal" data-tipo="montaje"
+            data-title="Fachada Residencial Torre Norte"
+            data-img="assets/img/hero1.jpg"
+            data-location="Puente Alto, RM"
+            data-badge="Montaje"
+            data-desc="Montaje de 480 m² de andamio Blitz en fachada de edificio residencial de 12 pisos. Se ejecutó con coordinación diaria, planificación por frente y control HSE permanente. Plazo cumplido en 5 días hábiles con cero incidentes.">
+            <div class="proj-card-img">
+              <img src="assets/img/hero1.jpg" alt="Fachada Residencial Torre Norte">
+              <span class="proj-card-badge montaje">Montaje</span>
             </div>
-
-            <div class="project-body">
-              <p class="project-tag">Proyecto</p>
-
-              <h2 class="project-title">
-                Montaje de andamios industriales
-              </h2>
-
-              <p class="project-brief">
-                Proyecto orientado a habilitar zonas de trabajo en altura con una solución segura, ordenada y coordinada según los requerimientos de obra.
-              </p>
-
-              <div class="project-meta">
-                <span class="project-chip">Ubicación: Puente Alto, RM</span>
-                <span class="project-chip">Servicio: Montaje</span>
-              </div>
-
-              <p class="project-text">
-                Se ejecutó el montaje de andamios con planificación previa, coordinación en terreno y control de condiciones críticas, asegurando continuidad operativa y cumplimiento de estándares de seguridad.
-              </p>
-
-              <div class="project-actions">
-                <a href="#" class="cta cta-cotizar" onclick="abrirCotizacion(); return false;">
-                  Cotizar un proyecto similar
-                </a>
-              </div>
+            <div class="proj-card-body">
+              <h3 class="proj-card-title">Fachada Residencial Torre Norte</h3>
+              <p class="proj-card-location">📍 Puente Alto, RM</p>
+              <button class="proj-card-btn" type="button">Ver detalle →</button>
             </div>
           </article>
 
-          <!-- PROYECTO 2 -->
-          <article class="project-card">
-            <div class="project-gallery">
-              <button class="gallery-btn prev" type="button" aria-label="Imagen anterior">‹</button>
-
-              <div class="gallery-track">
-                <img src="assets/img/montaje.jpg" class="gallery-image active" alt="Desmontaje y reorganización de frente de trabajo - foto 1">
-                <img src="assets/img/hero1.jpg" class="gallery-image" alt="Desmontaje y reorganización de frente de trabajo - foto 2">
-                <img src="assets/img/hero2.jpg" class="gallery-image" alt="Desmontaje y reorganización de frente de trabajo - foto 3">
-              </div>
-
-              <button class="gallery-btn next" type="button" aria-label="Imagen siguiente">›</button>
+          <!-- Proyecto 2: Montaje -->
+          <article class="proj-card reveal" data-tipo="montaje"
+            data-title="Estructura Comercial Las Américas"
+            data-img="assets/img/hero2.jpg"
+            data-location="La Florida, RM"
+            data-badge="Montaje"
+            data-desc="Montaje de andamio Allround para centro comercial de 2 pisos con geometría irregular. Sistema multidireccional adaptado a la estructura existente. 320 m² montados en 3 días hábiles, con supervisión permanente y control de accesos.">
+            <div class="proj-card-img">
+              <img src="assets/img/hero2.jpg" alt="Estructura Comercial Las Américas">
+              <span class="proj-card-badge montaje">Montaje</span>
             </div>
-
-            <div class="project-body">
-              <p class="project-tag">Proyecto</p>
-
-              <h2 class="project-title">
-                Desmontaje y reorganización de frente de trabajo
-              </h2>
-
-              <p class="project-brief">
-                Intervención enfocada en desmontaje controlado, orden de componentes y continuidad segura de las operaciones en terreno.
-              </p>
-
-              <div class="project-meta">
-                <span class="project-chip">Ubicación: Región Metropolitana</span>
-                <span class="project-chip">Servicio: Desmontaje</span>
-              </div>
-
-              <p class="project-text">
-                El proyecto contempló desmontaje por etapas, coordinación con equipos de obra y control de riesgos en zonas activas para mantener continuidad operativa.
-              </p>
-
-              <div class="project-actions">
-                <a href="#" class="cta cta-cotizar" onclick="abrirCotizacion(); return false;">
-                  Cotizar un proyecto similar
-                </a>
-              </div>
+            <div class="proj-card-body">
+              <h3 class="proj-card-title">Estructura Comercial Las Américas</h3>
+              <p class="proj-card-location">📍 La Florida, RM</p>
+              <button class="proj-card-btn" type="button">Ver detalle →</button>
             </div>
           </article>
 
-          <!-- PROYECTO 3 -->
-          <article class="project-card">
-            <div class="project-gallery">
-              <button class="gallery-btn prev" type="button" aria-label="Imagen anterior">‹</button>
-
-              <div class="gallery-track">
-                <img src="assets/img/supervision.jpg" class="gallery-image active" alt="Supervisión y control documental en obra - foto 1">
-                <img src="assets/img/hero1.jpg" class="gallery-image" alt="Supervisión y control documental en obra - foto 2">
-                <img src="assets/img/hero3.jpg" class="gallery-image" alt="Supervisión y control documental en obra - foto 3">
-              </div>
-
-              <button class="gallery-btn next" type="button" aria-label="Imagen siguiente">›</button>
+          <!-- Proyecto 3: Desmontaje -->
+          <article class="proj-card reveal" data-tipo="desmontaje"
+            data-title="Torre Corporativa Centro"
+            data-img="assets/img/hero3.jpg"
+            data-location="Las Condes, RM"
+            data-badge="Desmontaje"
+            data-desc="Desmontaje controlado por etapas en torre de oficinas con operación activa. Coordinación permanente con administración del edificio para minimizar interferencias. 620 m² desmontados en 8 días hábiles, cumpliendo todos los plazos y estándares de seguridad.">
+            <div class="proj-card-img">
+              <img src="assets/img/hero3.jpg" alt="Torre Corporativa Centro">
+              <span class="proj-card-badge desmontaje">Desmontaje</span>
             </div>
+            <div class="proj-card-body">
+              <h3 class="proj-card-title">Torre Corporativa Centro</h3>
+              <p class="proj-card-location">📍 Las Condes, RM</p>
+              <button class="proj-card-btn" type="button">Ver detalle →</button>
+            </div>
+          </article>
 
-            <div class="project-body">
-              <p class="project-tag">Proyecto</p>
+          <!-- Proyecto 4: Desmontaje -->
+          <article class="proj-card reveal" data-tipo="desmontaje"
+            data-title="Planta de Procesamiento Quilicura"
+            data-img="assets/img/montaje.jpg"
+            data-location="Quilicura, RM"
+            data-badge="Desmontaje"
+            data-desc="Desmontaje de andamiaje industrial en planta activa con operaciones paralelas. Gestión de accesos controlados, permisos de trabajo y coordinación con seguridad de la instalación. 850 m² en 10 días, con protocolo HSE riguroso y cero detenciones no programadas.">
+            <div class="proj-card-img">
+              <img src="assets/img/montaje.jpg" alt="Planta de Procesamiento Quilicura">
+              <span class="proj-card-badge desmontaje">Desmontaje</span>
+            </div>
+            <div class="proj-card-body">
+              <h3 class="proj-card-title">Planta de Procesamiento Quilicura</h3>
+              <p class="proj-card-location">📍 Quilicura, RM</p>
+              <button class="proj-card-btn" type="button">Ver detalle →</button>
+            </div>
+          </article>
 
-              <h2 class="project-title">
-                Supervisión y control documental en obra
-              </h2>
+          <!-- Proyecto 5: Supervisión -->
+          <article class="proj-card reveal" data-tipo="supervision"
+            data-title="Proyecto Habitacional Maipú"
+            data-img="assets/img/supervision.jpg"
+            data-location="Maipú, RM"
+            data-badge="Supervisión"
+            data-desc="Supervisión HSE de trabajos en altura durante 3 meses en proyecto habitacional de 8 torres. Control diario de EPP, checklists de condiciones, registros de incidencias y reportes semanales para gerencia de obra. 0 accidentes registrados durante todo el periodo.">
+            <div class="proj-card-img">
+              <img src="assets/img/supervision.jpg" alt="Proyecto Habitacional Maipú">
+              <span class="proj-card-badge supervision">Supervisión</span>
+            </div>
+            <div class="proj-card-body">
+              <h3 class="proj-card-title">Proyecto Habitacional Maipú</h3>
+              <p class="proj-card-location">📍 Maipú, RM</p>
+              <button class="proj-card-btn" type="button">Ver detalle →</button>
+            </div>
+          </article>
 
-              <p class="project-brief">
-                Proyecto centrado en supervisión en terreno, control de cumplimiento y apoyo documental para faenas relacionadas con andamios.
-              </p>
-
-              <div class="project-meta">
-                <span class="project-chip">Ubicación: Santiago</span>
-                <span class="project-chip">Servicio: Supervisión</span>
-              </div>
-
-              <p class="project-text">
-                MPS apoyó la verificación de condiciones de trabajo, aplicación de procedimientos y control visual de seguridad para facilitar la toma de decisiones en obra.
-              </p>
-
-              <div class="project-actions">
-                <a href="#" class="cta cta-cotizar" onclick="abrirCotizacion(); return false;">
-                  Cotizar un proyecto similar
-                </a>
-              </div>
+          <!-- Proyecto 6: Supervisión -->
+          <article class="proj-card reveal" data-tipo="supervision"
+            data-title="Centro Logístico San Bernardo"
+            data-img="assets/img/servicios.jpg"
+            data-location="San Bernardo, RM"
+            data-badge="Supervisión"
+            data-desc="Supervisión técnica y documental de montaje en centro de distribución de 4.200 m². Gestión completa de procedimientos HSE, capacitaciones al personal y auditorías semanales. 0 accidentes registrados. Documentación entregada al cierre para carpeta de obra del mandante.">
+            <div class="proj-card-img">
+              <img src="assets/img/servicios.jpg" alt="Centro Logístico San Bernardo">
+              <span class="proj-card-badge supervision">Supervisión</span>
+            </div>
+            <div class="proj-card-body">
+              <h3 class="proj-card-title">Centro Logístico San Bernardo</h3>
+              <p class="proj-card-location">📍 San Bernardo, RM</p>
+              <button class="proj-card-btn" type="button">Ver detalle →</button>
             </div>
           </article>
 
@@ -182,6 +168,23 @@
     </section>
 
   </main>
+
+  <!-- ===== MODAL DETALLE PROYECTO ===== -->
+  <div class="proj-modal" id="proj-modal" aria-hidden="true">
+    <div class="proj-modal-backdrop" id="proj-modal-backdrop"></div>
+    <div class="proj-modal-card" role="dialog" aria-modal="true" aria-labelledby="proj-modal-title">
+      <button class="proj-modal-close" id="proj-modal-close" type="button" aria-label="Cerrar">&times;</button>
+      <img class="proj-modal-img" id="proj-modal-img" src="" alt="">
+      <div class="proj-modal-body">
+        <span class="proj-modal-badge" id="proj-modal-badge"></span>
+        <h2 class="proj-modal-title" id="proj-modal-title"></h2>
+        <p class="proj-modal-location" id="proj-modal-location"></p>
+        <p class="proj-modal-desc" id="proj-modal-desc"></p>
+        <button class="cta cta-gold js-abrir-cotizacion" type="button" style="margin-top:0;">Cotizar proyecto similar</button>
+      </div>
+    </div>
+  </div>
+  <!-- ===== FIN MODAL DETALLE PROYECTO ===== -->
 
   <!-- ========== COTIZACIÓN RÁPIDA ========== -->
   <div class="quote-modal" id="quote-modal" aria-hidden="true">

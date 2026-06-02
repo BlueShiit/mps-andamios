@@ -34,90 +34,180 @@
 
   <main>
 
-    <!-- ===== ENCABEZADO SERVICIOS ===== -->
-    <section class="section" aria-labelledby="servicios-title">
-      <div class="container" style="text-align:center;">
-        <h1 id="servicios-title" style="margin:0; font-size:clamp(32px,4vw,54px); color: #ffb703;">
-          Servicios
-        </h1>
+    <!-- Hero pequeño -->
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <h1 class="page-hero-title">Nuestros Servicios</h1>
+        <p class="page-hero-sub">Montaje, desmontaje y gestión HSE de andamios con personal certificado y supervisión permanente en obra.</p>
+      </div>
+    </section>
 
-        <p class="lead" style="margin:14px auto 0; max-width:75ch;">
-          En <strong>MPS</strong> nos enfocamos en lo que mejor hacemos:
-          <strong>montaje y desmontaje de andamios</strong> y <strong>supervisión en obra</strong>,
-          con foco en seguridad, cumplimiento normativo y eficiencia en terreno.
-        </p>
+    <!-- Tabs de servicios -->
+    <section class="section servicios-tabs-section" aria-label="Servicios MPS">
+      <div class="container">
+
+        <div class="tabs-wrap">
+          <nav class="tabs-nav" role="tablist" aria-label="Servicios">
+            <button class="tab-btn is-active" data-tab="montaje" role="tab" aria-selected="true">Montaje y desmontaje</button>
+            <button class="tab-btn" data-tab="supervision" role="tab" aria-selected="false">Supervisión de obras</button>
+            <button class="tab-btn" data-tab="hse" role="tab" aria-selected="false">Gestión HSE</button>
+          </nav>
+          <select class="tabs-select" aria-label="Seleccionar servicio">
+            <option value="montaje">Montaje y desmontaje</option>
+            <option value="supervision">Supervisión de obras</option>
+            <option value="hse">Gestión HSE</option>
+          </select>
+        </div>
+
+        <!-- Panel 1: Montaje -->
+        <div class="tab-panel is-active" id="tab-montaje" role="tabpanel">
+          <article class="svc-panel">
+            <div class="svc-panel-media">
+              <img src="assets/img/montaje.jpg" alt="Montaje y desmontaje de andamios en obra">
+            </div>
+            <div class="svc-panel-body">
+              <p class="service-tag">Servicio</p>
+              <h2 class="svc-panel-title">Montaje y desmontaje de andamios</h2>
+              <p class="svc-panel-sub">Soluciones de trabajo en altura de manera eficiente y segura, con procedimientos claros y control permanente en terreno.</p>
+              <ul class="service-list">
+                <li>Personal certificado en trabajos en altura</li>
+                <li>Planificación por frente de trabajo</li>
+                <li>Coordinación de accesos y puntos críticos</li>
+                <li>Verificación visual de estabilidad</li>
+                <li>Registros y recomendaciones en terreno</li>
+              </ul>
+              <div class="service-actions">
+                <button class="cta cta-cotizar js-abrir-cotizacion" type="button">Cotizar este servicio</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Panel 2: Supervisión -->
+        <div class="tab-panel" id="tab-supervision" role="tabpanel">
+          <article class="svc-panel">
+            <div class="svc-panel-media">
+              <img src="assets/img/supervision.jpg" alt="Supervisión de obras y seguridad en andamios">
+            </div>
+            <div class="svc-panel-body">
+              <p class="service-tag">Servicio</p>
+              <h2 class="svc-panel-title">Supervisión de obras</h2>
+              <p class="svc-panel-sub">Supervisión en terreno enfocada en orden, seguridad y cumplimiento normativo para trabajos en altura.</p>
+              <ul class="service-list">
+                <li>Verificación de aplicación de procedimientos</li>
+                <li>Control del uso correcto de EPP</li>
+                <li>Apoyo directo a jefaturas y contratistas</li>
+                <li>Gestión de checklists, registros e informes</li>
+                <li>Reporte periódico de condiciones en obra</li>
+              </ul>
+              <div class="service-actions">
+                <button class="cta cta-cotizar js-abrir-cotizacion" type="button">Cotizar este servicio</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Panel 3: HSE -->
+        <div class="tab-panel" id="tab-hse" role="tabpanel">
+          <article class="svc-panel">
+            <div class="svc-panel-media">
+              <img src="assets/img/servicios.jpg" alt="Gestión HSE y documentación en obra">
+            </div>
+            <div class="svc-panel-body">
+              <p class="service-tag">Servicio</p>
+              <h2 class="svc-panel-title">Gestión HSE</h2>
+              <p class="svc-panel-sub">Apoyamos la gestión de seguridad, salud y medio ambiente en obra con documentación trazable y procedimientos claros.</p>
+              <ul class="service-list">
+                <li>Elaboración y control de procedimientos HSE</li>
+                <li>Checklists de condiciones de trabajo en altura</li>
+                <li>Registros de inducciones y capacitaciones</li>
+                <li>Reportes de incidentes y observaciones</li>
+                <li>Auditorías de cumplimiento normativo</li>
+              </ul>
+              <div class="service-actions">
+                <button class="cta cta-cotizar js-abrir-cotizacion" type="button">Cotizar este servicio</button>
+              </div>
+            </div>
+          </article>
+        </div>
 
       </div>
     </section>
 
-    <!-- ===== LISTADO DE SERVICIOS (2 tarjetas) ===== -->
-    <section class="section" aria-label="Listado de servicios">
-      <div class="container services-grid">
+    <!-- ¿Por qué contratarnos? -->
+    <section class="section dif-section" aria-labelledby="dif-title">
+      <div class="container">
+        <h2 id="dif-title" class="section-title">¿Por qué contratarnos?</h2>
+        <p class="dif-intro">Cuatro razones concretas que marcan la diferencia en cada faena.</p>
+        <div class="dif-grid">
 
-        <!-- Servicio 1 -->
-        <article class="service-card">
-          <div class="service-media">
-            <img src="assets/img/montaje.jpg" alt="Montaje y desmontaje de andamios en obra" />
-          </div>
-
-          <div class="service-body">
-            <p class="service-tag">Servicio</p>
-            <h2 class="service-title">Montaje y desmontaje de andamios</h2>
-
-            <p class="service-subtitle">
-             Soluciones de trabajo en altura de manera eficiente y segura. Coordinamos la operación con procedimientos claros, planificación y control en terreno.
-            </p>
-
-            <p>
-              Ejecutamos el montaje y desmontaje de andamios con personal certificado, planificación por frente de trabajo y control permanente en terreno. 
-              Priorizamos la seguridad y la continuidad operacional, coordinando accesos, puntos críticos y la secuencia de armado para evitar detenciones y reprocesos.
-            </p>
-            <p>
-              Realizamos verificación visual de estabilidad, orden de componentes y condiciones básicas del área de trabajo, dejando registros y recomendaciones que permiten
-               mantener el estándar durante toda la faena.
-            </p>
-
-
-            <div class="service-actions">
-              <a href="#" class="cta cta-cotizar" onclick="abrirCotizacion(); return false;">
-                Cotizar
-              </a>
+          <div class="dif-card reveal">
+            <div class="dif-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="2" width="14" height="20" rx="2" stroke="white" stroke-width="2"/>
+                <path d="M9 7h6M9 11h6M9 15h4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16 5l2 2-5 5" stroke="#FFB703" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="dif-body">
+              <h3>Personal certificado</h3>
+              <p>Todo nuestro equipo trabaja con certificaciones vigentes en trabajos en altura y uso correcto de EPP.</p>
             </div>
           </div>
-        </article>
 
-        <!-- Servicio 2 -->
-        <article class="service-card">
-          <div class="service-media">
-            <img src="assets/img/supervision.jpg" alt="Supervisión de obras y seguridad en andamios" />
-          </div>
-
-          <div class="service-body">
-            <p class="service-tag">Servicio</p>
-            <h2 class="service-title">Supervisión de obras</h2>
-
-            <p class="service-subtitle">
-              Supervisión en terreno enfocada en orden, seguridad y cumplimiento normativo. Apoyamos la gestión documental y el control de condiciones críticas para trabajos en altura.
-            </p>
-
-            <p>
-              Nuestro equipo supervisa las faenas en terreno verificando la correcta aplicación de procedimientos, el uso adecuado de EPP y la ejecución conforme a lo planificado. 
-              Actuamos como apoyo directo para jefaturas y contratistas en la coordinación diaria de los trabajos.
-            </p>
-            <p>
-              Además, gestionamos y revisamos la documentación exigida por obra —como checklists, registros e informes— entregando información clara y oportuna que facilita 
-              la toma de decisiones y la prevención de desviaciones durante la ejecución.
-            </p>
-
-
-            <div class="service-actions">
-              <a href="#" class="cta cta-cotizar" onclick="abrirCotizacion(); return false;">
-                Cotizar
-              </a>
+          <div class="dif-card reveal">
+            <div class="dif-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="4" width="18" height="18" rx="2" stroke="white" stroke-width="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="dif-body">
+              <h3>Planificación previa</h3>
+              <p>Antes de cada faena coordinamos accesos, secuencias de armado y condiciones críticas para evitar reprocesos.</p>
             </div>
           </div>
-        </article>
 
+          <div class="dif-card reveal">
+            <div class="dif-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/>
+                <circle cx="12" cy="12" r="3" stroke="white" stroke-width="2"/>
+                <path d="M12 3v2M12 19v2M3 12h2M19 12h2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="dif-body">
+              <h3>Control permanente en terreno</h3>
+              <p>Supervisamos cada etapa de la faena con presencia directa, reportando desviaciones en tiempo real.</p>
+            </div>
+          </div>
+
+          <div class="dif-card reveal">
+            <div class="dif-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M9 4.5H15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <rect x="8" y="2.5" width="8" height="4" rx="1.5" stroke="white" stroke-width="2"/>
+                <rect x="5" y="5.5" width="14" height="16" rx="2" stroke="white" stroke-width="2"/>
+                <path d="M8 11l1 1 2-2M13 11h3M8 15l1 1 2-2M13 15h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="dif-body">
+              <h3>Gestión documental completa</h3>
+              <p>Entregamos registros, checklists e informes que respaldan el cumplimiento normativo de cada proyecto.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="cta-band" aria-label="Cotizar">
+      <div class="container cta-band-inner">
+        <h2 class="cta-band-title">¿Listo para cotizar tu proyecto?</h2>
+        <p class="cta-band-sub">Cuéntanos los detalles de tu obra y te respondemos a la brevedad</p>
+        <button class="cta cta-gold js-abrir-cotizacion" type="button">Cotizar ahora</button>
       </div>
     </section>
 
