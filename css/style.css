@@ -71,8 +71,7 @@ a {
 }
 
 .logo-svg img {
-  height: 46px;
-  /* prueba con 32 si lo quieres un poco más grande */
+  height: 65px;
   width: auto;
   display: block;
 }

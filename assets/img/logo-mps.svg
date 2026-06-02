@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 390" role="img" aria-label="MPS Montajes Profesionales y Soluciones">
+  <title>MPS — Montajes Profesionales y Soluciones</title>
+  <!--
+    Azul marino : #1c2d5e
+    Dorado      : #d4a020
+    Azul medio  : #4d78c9
+  -->
+
+  <!-- ═══════════════════════════════════════
+       TIRANTES DIAGONALES — se dibujan primero
+       para quedar detrás de la estructura
+       ═══════════════════════════════════════ -->
+
+  <!-- Dorado (/ sube hacia la derecha) -->
+  <line x1="115" y1="122" x2="250" y2="52"  stroke="#d4a020" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="165" y1="122" x2="302" y2="52"  stroke="#d4a020" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Azul medio (\ baja hacia la derecha) -->
+  <line x1="115" y1="52"  x2="250" y2="122" stroke="#4d78c9" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="165" y1="52"  x2="302" y2="122" stroke="#4d78c9" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- ═══════════════════════════════════════
+       ESTRUCTURA PRINCIPAL
+       ═══════════════════════════════════════ -->
+
+  <!-- Travesaño superior — completo de exterior a exterior -->
+  <line x1="115" y1="52"  x2="302" y2="52"  stroke="#1c2d5e" stroke-width="5"   stroke-linecap="round"/>
+
+  <!-- Travesaño medio — completo -->
+  <line x1="115" y1="122" x2="302" y2="122" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- Travesaño inferior interior (entre postes interiores) -->
+  <line x1="165" y1="168" x2="250" y2="168" stroke="#1c2d5e" stroke-width="4"   stroke-linecap="round"/>
+
+  <!-- Postes interiores (terminan en el travesaño inferior interior) -->
+  <line x1="165" y1="52"  x2="165" y2="168" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="250" y1="52"  x2="250" y2="168" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- Postes exteriores — más gruesos y llegan más abajo (hasta las letras) -->
+  <line x1="115" y1="52"  x2="115" y2="192" stroke="#1c2d5e" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="302" y1="52"  x2="302" y2="192" stroke="#1c2d5e" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- Ápex → brazos diagonales hacia los postes INTERIORES (A-frame más estrecho) -->
+  <line x1="208" y1="8"   x2="165" y2="52"  stroke="#1c2d5e" stroke-width="5"   stroke-linecap="round"/>
+  <line x1="208" y1="8"   x2="250" y2="52"  stroke="#1c2d5e" stroke-width="5"   stroke-linecap="round"/>
+
+  <!-- ═══════════════════════════════════════
+       NODOS en intersecciones clave
+       ═══════════════════════════════════════ -->
+  <!-- Ápex -->
+  <circle cx="208" cy="8"   r="6"   fill="#1c2d5e"/>
+  <!-- Barra superior -->
+  <circle cx="115" cy="52"  r="5.5" fill="#1c2d5e"/>
+  <circle cx="165" cy="52"  r="5"   fill="#1c2d5e"/>
+  <circle cx="250" cy="52"  r="5"   fill="#1c2d5e"/>
+  <circle cx="302" cy="52"  r="5.5" fill="#1c2d5e"/>
+  <!-- Barra media -->
+  <circle cx="115" cy="122" r="5"   fill="#1c2d5e"/>
+  <circle cx="165" cy="122" r="5"   fill="#1c2d5e"/>
+  <circle cx="250" cy="122" r="5"   fill="#1c2d5e"/>
+  <circle cx="302" cy="122" r="5"   fill="#1c2d5e"/>
+  <!-- Barra inferior interior -->
+  <circle cx="165" cy="168" r="4.5" fill="#1c2d5e"/>
+  <circle cx="250" cy="168" r="4.5" fill="#1c2d5e"/>
+  <!-- Base postes exteriores -->
+  <circle cx="115" cy="192" r="5"   fill="#1c2d5e"/>
+  <circle cx="302" cy="192" r="5"   fill="#1c2d5e"/>
+
+  <!-- Pequeños conectores horizontales en la base de postes exteriores -->
+  <line x1="108" y1="192" x2="122" y2="192" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
+  <line x1="295" y1="192" x2="309" y2="192" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- ═══════════════════════════════════════
+       LETRAS MPS
+       ═══════════════════════════════════════ -->
+  <text x="72"  y="318"
+        font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif"
+        font-size="190" fill="#1c2d5e">M</text>
+  <text x="210" y="318"
+        font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif"
+        font-size="190" fill="#1c2d5e">P</text>
+  <text x="322" y="318"
+        font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif"
+        font-size="190" fill="#d4a020">S</text>
+
+  <!-- ═══════════════════════════════════════
+       NOMBRE DE LA EMPRESA
+       ═══════════════════════════════════════ -->
+  <text x="250" y="348"
+        font-family="'Arial Black',Impact,'Helvetica Neue',Arial,sans-serif"
+        font-size="19.5" font-weight="900"
+        fill="#1c2d5e" text-anchor="middle" letter-spacing="2.5">MONTAJES PROFESIONALES</text>
+
+  <line x1="40"  y1="368" x2="150" y2="368" stroke="#d4a020" stroke-width="2.5"/>
+  <text x="250" y="374"
+        font-family="'Arial Black',Impact,'Helvetica Neue',Arial,sans-serif"
+        font-size="17" font-weight="900"
+        fill="#d4a020" text-anchor="middle" letter-spacing="5">Y SOLUCIONES</text>
+  <line x1="352" y1="368" x2="462" y2="368" stroke="#d4a020" stroke-width="2.5"/>
+
+</svg>
