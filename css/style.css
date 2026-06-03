@@ -3625,3 +3625,357 @@ body.modal-open {
 @media (max-width: 660px) {
   .proj-modal-card { margin: 24px 16px; }
 }
+
+/* ============================
+   QUOTE WIZARD — 4 pasos
+   ============================ */
+
+.quote-card.qw-card {
+  max-width: 560px;
+  padding: 0;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+/* ── Header + step indicator ── */
+.qw-header {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--borde);
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.qw-main-title {
+  margin: 0 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  padding-right: 30px;
+}
+
+.qw-steps {
+  display: flex;
+  align-items: center;
+}
+
+.qw-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.qw-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.qw-lbl {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.qw-step.is-active .qw-dot { background: var(--primario); color: #fff; }
+.qw-step.is-active .qw-lbl { color: var(--primario); }
+.qw-step.is-done .qw-dot   { background: #22c55e; color: #fff; }
+.qw-step.is-done .qw-lbl   { color: #22c55e; }
+
+.qw-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin-bottom: 18px;
+  transition: background 0.2s;
+}
+.qw-line.is-done { background: #22c55e; }
+
+/* ── Panels ── */
+.qw-panel {
+  display: none;
+  padding: 18px 22px 22px;
+}
+.qw-panel.is-active { display: block; }
+
+.qw-desc {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Labels y errores dentro del wizard */
+.qw-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.qw-err {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* ── Tarjetas de sistema ── */
+.sys-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sys-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 12px;
+  border: 2px solid var(--borde);
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+  font: inherit;
+}
+.sys-card:hover { border-color: #94a3b8; background: #f8fafc; }
+.sys-card.is-selected { border-color: var(--primario); background: #eff6ff; }
+
+.sys-icon {
+  width: 40px;
+  height: 40px;
+  color: #94a3b8;
+  transition: color 0.15s;
+}
+.sys-card.is-selected .sys-icon { color: var(--primario); }
+
+.sys-name { font-size: 15px; font-weight: 700; color: #0f172a; }
+.sys-sub  { font-size: 11px; color: #64748b; }
+
+/* ── Tipo de trabajo ── */
+.work-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.work-btn {
+  padding: 10px 12px;
+  border: 1.5px solid var(--borde);
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  text-align: center;
+  line-height: 1.3;
+}
+.work-btn:hover { border-color: #94a3b8; background: #f8fafc; }
+.work-btn.is-selected { border-color: var(--primario); background: #eff6ff; color: var(--primario); }
+
+/* ── Campos del wizard ── */
+.qw-field {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qw-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.qw-field input,
+.qw-field select,
+.qw-field textarea {
+  font: inherit;
+  color: #0f172a;
+  color-scheme: light;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--borde);
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.qw-field input:focus,
+.qw-field select:focus,
+.qw-field textarea:focus {
+  border-color: var(--primario);
+  box-shadow: 0 0 0 1px rgba(10, 102, 194, 0.15);
+}
+.qw-field textarea { resize: vertical; min-height: 62px; }
+
+/* ── Contador +/- ── */
+.counter {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.counter-btn {
+  width: 36px;
+  height: 38px;
+  border: none;
+  background: #f8fafc;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+.counter-btn:hover { background: #e2e8f0; }
+
+.counter-val {
+  min-width: 44px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  border-left: 1px solid var(--borde);
+  border-right: 1px solid var(--borde);
+  padding: 0 8px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Alerta altura ── */
+.qw-alert {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+/* ── Caja de cálculo en tiempo real ── */
+.qw-calc {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.qw-calc-title {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #166534;
+}
+
+.qw-calc-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: #374151;
+}
+
+.qw-calc-divider {
+  border: none;
+  border-top: 1px solid #86efac;
+  margin: 8px 0;
+}
+
+.qw-calc-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  color: #166534;
+  font-size: 15px;
+  padding: 2px 0;
+}
+
+.qw-calc-nota {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* ── Navegación entre pasos ── */
+.qw-nav {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.qw-nav .cta,
+.qw-nav .btn-ghost { margin-top: 0; }
+
+/* ── Paso 4: éxito ── */
+.qw-success {
+  padding: 36px 16px;
+  text-align: center;
+}
+
+.qw-ok-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.qw-ok-msg {
+  font-size: 15px;
+  color: #0f172a;
+  margin: 0 0 24px;
+  line-height: 1.6;
+  max-width: 340px;
+  margin-inline: auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 580px) {
+  .quote-card.qw-card { margin: 16px 10px; }
+  .qw-row2 { grid-template-columns: 1fr; }
+  .work-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 380px) {
+  .sys-cards { grid-template-columns: 1fr; }
+  .work-grid { grid-template-columns: 1fr; }
+  .qw-lbl   { display: none; }
+}

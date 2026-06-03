@@ -191,92 +191,114 @@
   </div>
   <!-- ===== FIN MODAL DETALLE PROYECTO ===== -->
 
-  <!-- ========== COTIZACIÓN RÁPIDA ========== -->
+  <!-- ========== COTIZACIÓN (Wizard 4 pasos) ========== -->
   <div class="quote-modal" id="quote-modal" aria-hidden="true">
     <div class="quote-backdrop" id="quote-backdrop"></div>
+    <div class="quote-card qw-card" role="dialog" aria-modal="true" aria-labelledby="qw-title">
+      <button class="quote-close" id="quote-close" type="button" aria-label="Cerrar">&times;</button>
 
-    <div class="quote-card" role="dialog" aria-modal="true" aria-labelledby="quote-title">
-      <button class="quote-close" type="button" aria-label="Cerrar cotización">&times;</button>
+      <div class="qw-header">
+        <h2 class="qw-main-title" id="qw-title">Cotiza tu proyecto</h2>
+        <div class="qw-steps" aria-label="Pasos del formulario">
+          <div class="qw-step is-active" data-step="1"><span class="qw-dot">1</span><span class="qw-lbl">Andamio</span></div>
+          <div class="qw-line"></div>
+          <div class="qw-step" data-step="2"><span class="qw-dot">2</span><span class="qw-lbl">Dimensiones</span></div>
+          <div class="qw-line"></div>
+          <div class="qw-step" data-step="3"><span class="qw-dot">3</span><span class="qw-lbl">Contacto</span></div>
+          <div class="qw-line"></div>
+          <div class="qw-step" data-step="4"><span class="qw-dot">4</span><span class="qw-lbl">Listo</span></div>
+        </div>
+      </div>
 
-      <h2 id="quote-title">Cotización rápida</h2>
-      <p class="muted tiny">
-        Selecciona el tipo de andamio y completa los datos de tu obra. Te contactaremos a la brevedad.
-      </p>
+      <div class="qw-panel is-active" id="qw-panel-1">
+        <p class="qw-desc">Selecciona el sistema de andamio y el tipo de trabajo.</p>
+        <p class="qw-label">Sistema de andamio</p>
+        <div class="sys-cards">
+          <button type="button" class="sys-card" data-sistema="blitz">
+            <svg class="sys-icon" viewBox="0 0 48 48" fill="none"><rect x="6" y="8" width="36" height="32" rx="2" stroke="currentColor" stroke-width="2.5"/><line x1="6" y1="18" x2="42" y2="18" stroke="currentColor" stroke-width="2"/><line x1="6" y1="28" x2="42" y2="28" stroke="currentColor" stroke-width="2"/><line x1="18" y1="8" x2="18" y2="40" stroke="currentColor" stroke-width="2"/><line x1="30" y1="8" x2="30" y2="40" stroke="currentColor" stroke-width="2"/></svg>
+            <span class="sys-name">Blitz</span><span class="sys-sub">Fachadas / Edificación</span>
+          </button>
+          <button type="button" class="sys-card" data-sistema="allround">
+            <svg class="sys-icon" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2.5"/><line x1="24" y1="8" x2="24" y2="40" stroke="currentColor" stroke-width="2"/><line x1="8" y1="24" x2="40" y2="24" stroke="currentColor" stroke-width="2"/><line x1="13" y1="13" x2="35" y2="35" stroke="currentColor" stroke-width="2"/><line x1="35" y1="13" x2="13" y2="35" stroke="currentColor" stroke-width="2"/></svg>
+            <span class="sys-name">Allround</span><span class="sys-sub">Industrial / Estructuras</span>
+          </button>
+        </div>
+        <p class="qw-err" id="err-sistema" hidden>Selecciona un sistema de andamio.</p>
+        <p class="qw-label" style="margin-top:18px">Tipo de trabajo</p>
+        <div class="work-grid">
+          <button type="button" class="work-btn" data-tipo="montaje-desmontaje">Montaje y desmontaje</button>
+          <button type="button" class="work-btn" data-tipo="solo-montaje">Solo montaje</button>
+          <button type="button" class="work-btn" data-tipo="solo-desmontaje">Solo desmontaje</button>
+          <button type="button" class="work-btn" data-tipo="supervision">Supervisión de obra</button>
+        </div>
+        <p class="qw-err" id="err-tipo" hidden>Selecciona el tipo de trabajo.</p>
+        <div class="qw-nav"><span></span><button type="button" class="cta cta-cotizar" id="qw-next-1">Siguiente →</button></div>
+      </div>
 
-      <form
-        id="quote-form"
-        name="cotizacion"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-      >
-        <input type="hidden" name="form-name" value="cotizacion">
+      <div class="qw-panel" id="qw-panel-2">
+        <div id="qw-blitz-fields">
+          <p class="qw-desc">Dimensiones de la fachada.</p>
+          <div class="qw-row2">
+            <div class="qw-field"><label class="qw-label" for="qw-ancho">Ancho de fachada (m)</label><input type="number" id="qw-ancho" min="0.5" max="500" step="0.5" placeholder="Ej: 12"><p class="qw-err" id="err-ancho" hidden>Ingresa el ancho.</p></div>
+            <div class="qw-field"><label class="qw-label" for="qw-alto">Alto de fachada (m)</label><input type="number" id="qw-alto" min="0.5" max="200" step="0.5" placeholder="Ej: 8"><p class="qw-err" id="err-alto" hidden>Ingresa el alto.</p></div>
+          </div>
+          <div class="qw-field"><p class="qw-label">N° de fachadas</p><div class="counter"><button type="button" class="counter-btn" id="fachadas-minus">−</button><span class="counter-val" id="fachadas-val">1</span><button type="button" class="counter-btn" id="fachadas-plus">+</button></div></div>
+        </div>
+        <div id="qw-allround-fields" hidden>
+          <p class="qw-desc">Datos de la estructura.</p>
+          <div class="qw-field"><label class="qw-label" for="qw-kg">Kilogramos totales (desde guía Layher)</label><input type="number" id="qw-kg" min="100" max="500000" step="100" placeholder="Ej: 5000"><p class="qw-err" id="err-kg" hidden>Ingresa los kilogramos.</p></div>
+          <div class="qw-field"><label class="qw-label" for="qw-altura">Altura máxima de la estructura (m)</label><input type="number" id="qw-altura" min="0.5" max="200" step="0.5" placeholder="Ej: 8"><p class="qw-err" id="err-altura" hidden>Ingresa la altura.</p></div>
+        </div>
+        <div class="qw-alert" id="qw-alert" hidden>⚠️ Altura mayor a 10m: trabajo con roldana (2 arriba + 2 abajo) y recargo del 50% sobre los días en altura.</div>
+        <div class="qw-calc" id="qw-calc" hidden></div>
+        <div class="qw-nav"><button type="button" class="btn-ghost" id="qw-prev-2">← Anterior</button><button type="button" class="cta cta-cotizar" id="qw-next-2">Siguiente →</button></div>
+      </div>
 
-        <p hidden>
-          <label>
-            Don’t fill this out: <input name="bot-field">
-          </label>
-        </p>
-
-        <div class="field">
-          <label for="tipo-andamio">Tipo de andamio</label>
-          <select id="tipo-andamio" name="tipo_andamio" required>
-            <option value="">Selecciona una opción</option>
-            <option value="blitz">Andamios Blitz</option>
-            <option value="allround">Andamios Allround</option>
+      <div class="qw-panel" id="qw-panel-3">
+        <p class="qw-desc">Datos de contacto.</p>
+        <div class="qw-row2">
+          <div class="qw-field"><label class="qw-label" for="qw-empresa">Empresa o razón social</label><input type="text" id="qw-empresa" placeholder="Ej: Constructora XYZ" autocomplete="organization"><p class="qw-err" id="err-empresa" hidden>Campo requerido.</p></div>
+          <div class="qw-field"><label class="qw-label" for="qw-nombre">Nombre de contacto</label><input type="text" id="qw-nombre" placeholder="Ej: Juan Pérez" autocomplete="name"><p class="qw-err" id="err-nombre" hidden>Campo requerido.</p></div>
+        </div>
+        <div class="qw-field"><label class="qw-label" for="qw-cargo">Cargo</label><input type="text" id="qw-cargo" placeholder="Ej: Jefe de obra" autocomplete="organization-title"><p class="qw-err" id="err-cargo" hidden>Campo requerido.</p></div>
+        <div class="qw-field">
+          <p class="qw-label">Teléfono</p>
+          <div class="phone-wrap"><select id="qw-prefijo" class="phone-prefix"><option value="+56" selected>🇨🇱 +56</option><option value="+54">🇦🇷 +54</option><option value="+51">🇵🇪 +51</option><option value="+591">🇧🇴 +591</option></select><input type="tel" id="qw-tel" placeholder="9 1234 5678" inputmode="numeric"></div>
+          <p class="qw-err" id="err-tel" hidden>Ingresa un teléfono válido.</p>
+        </div>
+        <div class="qw-field"><label class="qw-label" for="qw-correo">Correo electrónico</label><input type="email" id="qw-correo" placeholder="nombre@empresa.cl" autocomplete="email"><p class="qw-err" id="err-correo" hidden>Ingresa un correo válido.</p></div>
+        <div class="qw-field">
+          <label class="qw-label" for="qw-ciudad">Ciudad / Comuna</label>
+          <select id="qw-ciudad">
+            <option value="">Selecciona...</option>
+            <optgroup label="Región Metropolitana"><option>Santiago</option><option>Puente Alto</option><option>Maipú</option><option>La Florida</option><option>Las Condes</option><option>Ñuñoa</option><option>Providencia</option><option>Vitacura</option><option>Lo Barnechea</option><option>Peñalolén</option><option>San Miguel</option><option>San Bernardo</option><option>Quilicura</option><option>La Reina</option><option>Macul</option><option>Pudahuel</option><option>Conchalí</option><option>Huechuraba</option><option>Recoleta</option><option>Independencia</option><option>Cerro Navia</option><option>Lo Espejo</option><option>Lo Prado</option><option>Renca</option><option>Cerrillos</option><option>Estación Central</option><option>El Bosque</option><option>La Granja</option><option>La Pintana</option><option>La Cisterna</option><option>San Joaquín</option><option>Pedro Aguirre Cerda</option></optgroup>
+            <optgroup label="Otras ciudades"><option>Rancagua</option><option>Valparaíso</option><option>Viña del Mar</option><option>Otra</option></optgroup>
           </select>
+          <p class="qw-err" id="err-ciudad" hidden>Selecciona una ciudad.</p>
         </div>
+        <div class="qw-field"><label class="qw-label" for="qw-obs">Observaciones (opcional)</label><textarea id="qw-obs" rows="2" placeholder="Plazos, accesos, condiciones especiales..."></textarea></div>
+        <div class="qw-nav"><button type="button" class="btn-ghost" id="qw-prev-3">← Anterior</button><button type="button" class="cta cta-cotizar" id="qw-submit">Enviar cotización</button></div>
+      </div>
 
-        <div class="field" id="campo-blitz">
-          <label for="m2-blitz">Metros cuadrados de andamio (Blitz)</label>
-          <input type="number" id="m2-blitz" name="m2_blitz" min="20" max="5000" step="10" placeholder="Ej: 250" />
+      <div class="qw-panel" id="qw-panel-4">
+        <div class="qw-success">
+          <div class="qw-ok-icon">✓</div>
+          <p class="qw-ok-msg">Tu cotización fue enviada. El equipo MPS te contactará en menos de 2 horas hábiles.</p>
+          <button type="button" class="cta cta-cotizar" id="qw-done">Cerrar</button>
         </div>
+      </div>
 
-        <div class="field" id="campo-allround">
-          <label for="kg-allround">Kilos de carga requeridos (Allround)</label>
-          <input type="number" id="kg-allround" name="kg_allround" min="500" max="50000" step="500" placeholder="Ej: 5000" />
-        </div>
-
-        <div class="field">
-          <label for="ciudad">Ciudad de la obra</label>
-          <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Puente Alto, RM" required />
-        </div>
-
-        <div class="field">
-          <label for="direccion">Dirección de la obra</label>
-          <input type="text" id="direccion" name="direccion" placeholder="Calle, número, referencia" required />
-        </div>
-
-        <div class="field">
-          <label for="empresa">Nombre de la empresa</label>
-          <input type="text" id="empresa" name="empresa" placeholder="Razón social o nombre de la empresa" required />
-        </div>
-
-        <div class="field">
-          <label for="telefono">Número de contacto</label>
-          <input
-            type="tel"
-            id="telefono"
-            name="telefono"
-            placeholder="+56 9 1234 5678"
-            inputmode="numeric"
-            pattern="[0-9+ ]*"
-            required
-          />
-        </div>
-
-        <div class="field">
-          <label for="correo">Correo de contacto</label>
-          <input type="email" id="correo" name="correo" placeholder="nombre@empresa.cl" required />
-        </div>
-
-        <div class="quote-actions">
-          <button type="button" class="btn-ghost" id="quote-cancelar">Cancelar</button>
-          <button type="submit" class="cta cta-cotizar">Enviar cotización</button>
-        </div>
-      </form>
     </div>
   </div>
+
+  <form id="qw-netlify-form" name="cotizacion" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="cotizacion"><input name="bot-field" hidden>
+    <input name="tipo_andamio"><input name="tipo_trabajo"><input name="ancho"><input name="alto"><input name="fachadas">
+    <input name="m2_blitz"><input name="kg_allround"><input name="altura_allround">
+    <input name="empresa"><input name="nombre_contacto"><input name="cargo">
+    <input name="telefono"><input name="correo"><input name="ciudad"><input name="observaciones">
+  </form>
+  <!-- ========== FIN COTIZACIÓN ========== -->
 
   <!-- ===== FOOTER ===== -->
   <footer>
