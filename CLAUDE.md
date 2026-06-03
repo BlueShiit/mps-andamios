@@ -133,56 +133,101 @@ Todas las páginas comparten el mismo navbar con estos 4 enlaces:
 - Animaciones: `contactFadeIn`, `contactHalo` (halo verde pulsante), `iconBounce`, `iconShake`
 - **Nota:** `index.html` conserva el HTML del panel `.contact-panel` (residual, inaccessible), las demás páginas solo tienen el botón `<a>`
 
-### Modal de cotización
-- Presente en: `index.html`, `servicios.html`, `proyectos.html`
+### Modal de cotización — Wizard 4 pasos
+- Presente en: `index.html`, `servicios.html`, `proyectos.html` (idéntico en los 3)
 - Se abre con `id="btn-cotizacion"`, clase `.js-abrir-cotizacion`, o URL `?cotizar=1`
-- `cerrarCotizacion()` resetea el formulario, limpia estados de validación y oculta el mensaje de éxito
-- **Mensaje de éxito inline**: al enviar correctamente, se oculta el form y aparece un div `.quote-success` con *"¡Cotización enviada! Te contactaremos a la brevedad."* y botón "Cerrar". El elemento se crea dinámicamente en JS y se appenda a `.quote-card`
-- Flujo: Supabase → Netlify Forms → `send-mail` (admin + cliente)
+- `window.abrirCotizacion()` / `window.cerrarCotizacion()` expuestas globalmente
+- Al cerrar: `resetWizard()` limpia estado, selecciones y campos, vuelve al paso 1
+- Flujo de envío: Supabase → Netlify Forms (form oculto `#qw-netlify-form`) → `send-mail`
+- Hay un `<form hidden id="qw-netlify-form" data-netlify="true">` al final del modal para que Netlify detecte el form en el build estático
 
-### Formulario de cotización — campos y validaciones
-| Campo | Comportamiento |
-|---|---|
-| Tipo de andamio | Select Blitz/Allround. **Validación inline obligatoria antes de enviar** (error rojo si vacío). Muestra/oculta m² o kg |
-| M² / KG | Rango: 20–5.000 m² / 500–50.000 kg. Validación inline + activa caja de precio |
-| Ciudad | Autocomplete custom con ~60 ciudades/comunas chilenas |
-| Dirección | Autocomplete Nominatim (OpenStreetMap, `countrycodes=cl`). Al seleccionar rellena Ciudad |
-| Empresa | Validación en blur, mín. 2 caracteres |
-| Teléfono | `phone-wrap`: selector prefijo + input. **Solo 4 países**: Chile +56 (defecto), Argentina +54, Perú +51, Bolivia +591 |
-| Correo | Validación regex en tiempo real |
+**Estructura del wizard (`.quote-card.qw-card`):**
+| Panel | ID | Contenido |
+|---|---|---|
+| Paso 1 | `#qw-panel-1` | Tarjetas sistema (`.sys-card`) + botones tipo trabajo (`.work-btn`) |
+| Paso 2 | `#qw-panel-2` | Campos dimensiones + contador fachadas + alerta altura + cálculo en tiempo real |
+| Paso 3 | `#qw-panel-3` | Datos contacto (empresa, nombre, cargo, teléfono, correo, ciudad, observaciones) |
+| Paso 4 | `#qw-panel-4` | Confirmación: "Tu cotización fue enviada. El equipo MPS te contactará en menos de 2 horas hábiles." |
 
-### Algoritmo de cotización (`PRICING` en `main.js`)
-**Blitz (m²):** $4.200 → $3.600 → $3.000 → $2.500
-**Allround (kg):** $380 → $320 → $260 → $200
+**Indicador de pasos:** `.qw-steps` → 4 `.qw-step` con `.qw-dot` (número) + `.qw-lbl`. Estados: `is-active` (azul), `is-done` (verde, muestra ✓ via JS). Líneas conectoras `.qw-line` se vuelven verdes con `is-done`.
 
-- `calcularPrecio(tipo, cantidad)` → `{ cantidad, unidad, precioUnitario, neto, iva, total }`
-- `formatCLP(n)` → `$1.500.000` con `toLocaleString("es-CL")`
-- Caja verde `.precio-box` aparece en tiempo real al ingresar m²/kg
+### Formulario de cotización — campos por paso
+
+**Paso 1:**
+- Sistema: `.sys-card[data-sistema="blitz"]` / `.sys-card[data-sistema="allround"]` — tarjetas visuales con SVG e ícono
+- Tipo de trabajo: `.work-btn[data-tipo]` — 4 opciones: `montaje-desmontaje`, `solo-montaje`, `solo-desmontaje`, `supervision`
+
+**Paso 2 (Blitz):** `#qw-ancho` (m), `#qw-alto` (m), contador `#fachadas-val` (botones `#fachadas-minus` / `#fachadas-plus`, mínimo 1)
+**Paso 2 (Allround):** `#qw-kg` (kg totales), `#qw-altura` (altura máxima m)
+- Alerta `#qw-alert` aparece automáticamente si altura > 10m
+- Caja `#qw-calc` muestra cálculo en tiempo real al escribir
+
+**Paso 3:** `#qw-empresa`, `#qw-nombre`, `#qw-cargo`, `#qw-prefijo` + `#qw-tel` (`phone-wrap`), `#qw-correo`, `#qw-ciudad` (select con optgroups RM + otras ciudades), `#qw-obs` (textarea opcional)
+- Teléfono: **Solo 4 países**: Chile +56 (defecto), Argentina +54, Perú +51, Bolivia +591
+- Ciudad: select con optgroup "Región Metropolitana" (32 comunas) + "Otras ciudades" (Rancagua, Valparaíso, Viña del Mar, Otra)
+
+Errores de validación: elementos `<p class="qw-err" id="err-*" hidden>` que se muestran/ocultan por JS.
+
+### Algoritmo de cotización (`calcularObra()` en `initQuoteWizard`)
+
+**Blitz:**
+```
+m² = ancho × alto × fachadas
+rendimiento = alto ≤ 10m → 200 m²/día | alto > 10m → 100 m²/día
+diasM = diasD = ⌈m² ÷ rendimiento⌉
+recargo = alto > 10m → 1.5 | sino 1
+precioM = m² × $1.800  (0 si solo-desmontaje o supervisión)
+precioD = m² × $1.500  (0 si solo-montaje o supervisión)
+```
+
+**Allround:**
+```
+rendimiento = altura ≤ 10m → 2.400 kg/día | altura > 10m → 1.200 kg/día
+metodo = altura ≤ 10m → "Cadena humana" | altura > 10m → "Roldana"
+diasM = diasD = ⌈kg ÷ rendimiento⌉
+recargo = altura > 10m → 1.5 | sino 1
+precioM = kg × $380  (0 si solo-desmontaje o supervisión)
+precioD = kg × $350  (0 si solo-montaje o supervisión)
+```
+
+**Ambos sistemas:**
+```
+diasActivos = solo-montaje→diasM | solo-desmontaje→diasD | resto→diasM+diasD
+costoTrab = diasActivos × $240.000 × recargo
+utilidad = total - costoTrab
+```
+
+Retorna objeto: `{ sistema, m2/kg, diasM, diasD, recargo, precioM, precioD, total, costoTrab, utilidad, ...dims }`
 
 ### Supabase — tabla `cotizaciones`
-Columnas: `id`, `created_at`, `tipo_andamio`, `m2_blitz`, `kg_allround`, `ciudad`, `direccion`, `empresa`, `telefono`, `correo`, `precio_unitario`, `precio_neto`, `precio_iva`, `precio_total`
+Columnas actuales enviadas por el wizard:
+`id`, `created_at`, `tipo_andamio`, `tipo_trabajo`, `ancho`, `alto`, `fachadas`, `m2_blitz`, `kg_allround`, `altura_allround`, `empresa`, `nombre_contacto`, `cargo`, `telefono`, `correo`, `ciudad`, `observaciones`, `precio_montaje`, `precio_desmontaje`, `precio_total`
 
-Fallback defensivo: si columnas de precio no existen, reintenta sin ellas.
+Fallback defensivo: si el insert falla (columnas nuevas no existen en Supabase), reintenta con payload mínimo `{ tipo_andamio, empresa, telefono, correo, ciudad, created_at }`.
 
 ### Email automático (`netlify/functions/send-mail.js`)
-- `emailClienteHTML()`: confirmación al cliente con desglose de precio
-- `emailAdminHTML()`: notificación interna con todos los datos
-- `precioBlock(precio)`: tabla de desglose CLP (reutilizada en ambos)
+- Asunto admin: `Nueva cotización MPS — [SISTEMA] — [Empresa] — [Ciudad]`
+- `emailAdminHTML(data)`: 4 secciones — Datos de la obra / Estimado de precios / **Desglose interno MPS** (días, recargo, costo cuadrilla, utilidad — nunca visible al cliente) / Datos de contacto
+- `emailClienteHTML(data)`: confirmación con estimado de precios (sin desglose interno)
+- Helpers: `seccionObra()`, `seccionPrecios()`, `seccionInterna()`, `seccionContacto()`, `fmtCLP()`, `esc()`
 
 ### JS — funciones y módulos en `main.js`
 | Función / Módulo | Descripción |
 |---|---|
-| `abrirCotizacion()` / `cerrarCotizacion()` | Abrir/cerrar modal + reset completo del form al cerrar |
+| `initQuoteWizard()` | IIFE principal del wizard: estado, navegación, cálculo, validación, envío |
+| `calcularObra()` | Algoritmo de precios MPS — retorna objeto con días, precios, costos, utilidad |
+| `renderCalc(c)` | Renderiza la caja `.qw-calc` con resultado en tiempo real |
+| `goToStep(n)` | Navega entre pasos: actualiza panels, dots, lines |
+| `abrirModal()` / `cerrarModal()` | Abrir/cerrar + `resetWizard()` con delay 300ms al cerrar |
+| `window.abrirCotizacion` / `window.cerrarCotizacion` | Aliases globales expuestos por el wizard |
 | `.js-abrir-cotizacion` | Clase para cualquier botón que abra el modal |
 | `initHeroSlider()` | Carrusel del hero con autoplay, dots, swipe |
-| `initFormHelpers()` | Autocomplete ciudad/dirección + validaciones inline |
 | `initMobileNav()` | Hamburger toggle, cierre al hacer clic en enlace o fuera |
-| `PRICING` / `calcularPrecio()` | Algoritmo de precios por tramo |
 | Tabs (servicios.html) | Switch de paneles por `data-tab`; mobile usa `<select>` |
 | Filtro proyectos | Botones `.filtro-btn` filtran `.proj-card` por `data-tipo` |
 | Modal proyecto | `.proj-card-btn` abre `.proj-modal` con datos del `data-*` del card |
 | Scroll reveal | `IntersectionObserver` sobre `.reveal` |
-| Auto-open modal | Detecta `?cotizar=1` → abre modal y limpia URL |
+| Auto-open modal | Detecta `?cotizar=1` dentro del wizard IIFE (sin DOMContentLoaded extra) |
 
 ### CSS — clases relevantes
 | Clase | Uso |
@@ -211,11 +256,31 @@ Fallback defensivo: si columnas de precio no existen, reintenta sin ellas.
 | `.nav.is-open` | Nav abierta en mobile |
 | `.contact-toggle` | Botón flotante WhatsApp (fondo `#25D366`) |
 | `.contact-icon-svg` | SVG WhatsApp dentro del botón (40×40px) |
-| `.quote-modal` / `.quote-card` / `.quote-success` | Modal cotización + estado éxito |
-| `.field--valid` / `.field--invalid` / `.field-hint` | Validación inline inputs |
-| `.precio-box` | Caja estimación precio |
 | `body.modal-open` | Bloquea scroll del fondo |
 | `.footer-logo` | Logo footer con `filter: brightness(0) invert(1)` |
+| **Wizard de cotización** | |
+| `.quote-modal` / `.quote-modal.is-open` | Contenedor modal (display none → block) |
+| `.quote-backdrop` | Fondo oscuro difuminado (position fixed) |
+| `.quote-card.qw-card` | Card del wizard (max-width 560px, overflow-y auto, max-height calc(100vh - 80px)) |
+| `.quote-close` | Botón × (position absolute top-right) |
+| `.qw-header` | Cabecera sticky con título + indicador de pasos |
+| `.qw-steps` / `.qw-step` / `.qw-dot` / `.qw-lbl` | Indicador de pasos |
+| `.qw-step.is-active` / `.qw-step.is-done` | Estado activo (azul) / completado (verde ✓) |
+| `.qw-line` / `.qw-line.is-done` | Línea conectora entre pasos (gris → verde) |
+| `.qw-panel` / `.qw-panel.is-active` | Panel de cada paso (display none → block) |
+| `.qw-desc` / `.qw-label` / `.qw-err` | Descripción, etiqueta y error de campo |
+| `.sys-cards` / `.sys-card` / `.sys-card.is-selected` | Tarjetas Blitz/Allround (borde azul cuando seleccionado) |
+| `.sys-icon` / `.sys-name` / `.sys-sub` | Elementos internos de tarjeta de sistema |
+| `.work-grid` / `.work-btn` / `.work-btn.is-selected` | Grid 2×2 de tipo de trabajo |
+| `.qw-row2` | Grid 2 columnas para campos lado a lado |
+| `.qw-field` | Wrapper de campo (flex-column, gap 4px) |
+| `.counter` / `.counter-btn` / `.counter-val` | Contador +/− para fachadas |
+| `.qw-alert` | Alerta amarilla de altura >10m |
+| `.qw-calc` / `.qw-calc-title` / `.qw-calc-row` / `.qw-calc-total` | Caja de cálculo en tiempo real (fondo verde claro) |
+| `.qw-calc-divider` / `.qw-calc-nota` | Separador y nota del cálculo |
+| `.qw-nav` | Fila de navegación (Anterior / Siguiente) |
+| `.qw-success` / `.qw-ok-icon` / `.qw-ok-msg` | Panel de éxito (paso 4) |
+| `.qw-field .phone-wrap select` / `.qw-field .phone-wrap input` | Override para que el phone-wrap funcione en el wizard (width auto / flex 1) |
 
 ### Footer (todas las páginas)
 - **Col 1**: Logo + descripción + Contacto (email, WhatsApp) + Ubicación (Puente Alto, RM)
@@ -229,48 +294,45 @@ Fallback defensivo: si columnas de precio no existen, reintenta sin ellas.
 ## Decisiones técnicas importantes
 
 - Navbar renombrado "Nosotros" → "Conócenos" para evitar conflicto con `#nosotros` del index.
-- Datalist nativo reemplazado por autocomplete custom para ciudad (macOS cambiaba el esquema de color).
-- `color-scheme: light` en `.field input` para forzar modo claro en controles nativos.
+- `color-scheme: light` en inputs del wizard para forzar modo claro en controles nativos.
 - `.quote-backdrop` usa `position: fixed` para no desplazarse al hacer scroll dentro del modal.
-- Supabase fallback: reintenta insert sin columnas de precio si falla.
+- Supabase fallback: reintenta insert con payload mínimo si falla por columnas nuevas.
 - Logo SVG: el `<rect fill="white"/>` fue eliminado para fondo transparente. Footer aplica `filter: brightness(0) invert(1)`.
 - Botones que abren cotización usan `.js-abrir-cotizacion`; el botón del hero usa adicionalmente `id="btn-cotizacion"`.
 - Tabs servicios: `.is-active` en panel visible. Mobile (<580px): `<nav>` oculta, `<select>` visible.
 - Filtro proyectos: JS puro con `display: none/''` sobre `.proj-card[data-tipo]`.
 - Modal proyecto (`proj-modal`, z-index 80) independiente del modal cotización (`quote-modal`, z-index 60).
 - Navbar mobile: el dropdown usa `position: absolute` dentro del `position: sticky` del topbar. Cierra con clic en enlace o fuera del navbar.
-- Botón flotante WhatsApp: cambiado de `<button>` a `<a>` con href directo. El JS ya no tiene listener para `.contact-toggle`. El panel `.contact-panel` en `index.html` quedó residual (HTML existe pero no es accesible).
+- Botón flotante WhatsApp: `<a>` con href directo a WhatsApp. El JS no tiene listener para `.contact-toggle`. El panel `.contact-panel` en `index.html` quedó residual (HTML existe pero no es accesible).
 - `nosotros.html` secciones expandidas: el layout alternado usa `direction: rtl` en `.nos-exp-item--alt .nos-exp-grid` y `direction: ltr` en sus hijos. En mobile (≤860px) se revierte a `direction: ltr`.
-- Mensaje de éxito del formulario: creado dinámicamente en JS con `document.createElement`, appended a `.quote-card`. Al cerrar se restaura el estado inicial (form visible, success hidden, campos limpios).
+- **Wizard de cotización:** no usa `<form>` nativo. Hay un `<form hidden id="qw-netlify-form" data-netlify="true">` solo para que Netlify detecte el form en build estático. Los datos se envían manualmente vía `fetch` con `FormData`.
+- **Phone-wrap en el wizard:** la regla `.qw-field input/select { width: 100% }` pisaba al select de prefijo y al input dentro del `.phone-wrap`. Se overridea con `.qw-field .phone-wrap select { width: auto }` y `.qw-field .phone-wrap input { width: 0; flex: 1 }` para restaurar el layout flex correcto.
+- **Paso 4 del wizard:** no muestra resumen de la cotización — solo el mensaje de confirmación y botón "Cerrar". El desglose interno (costos, utilidad) solo se envía por email al admin, nunca se muestra en pantalla.
+- **Auto-open `?cotizar=1`:** la detección está dentro del IIFE `initQuoteWizard` y no necesita `DOMContentLoaded` wrapper porque el script está al final del `<body>`.
 
 ---
 
-## Estado del proyecto al 2026-06-02
+## Estado del proyecto al 2026-06-03
 
 ### Commits en GitHub / Netlify (desplegados)
-| Tag | Commit | Descripción |
-|---|---|---|
-| `v1.4-ux-mejoras-20260602` | `3429eeb` | Hero textos, formulario, navbar mobile hamburguesa, slider mobile |
-| `v1.3-paginas-completas-20260601` | `1d01bb5` | Secciones completas en todas las páginas + lógica JS |
-| `v1.2-logo-definitivo-20260601` | `13d8f73` | Logo definitivo con fondo transparente |
+| Commit | Descripción |
+|---|---|
+| `52f64a2` | fix: select de prefijo telefónico ocupaba todo el ancho en el wizard |
+| `b34ef4c` | fix: input teléfono del wizard no era editable |
+| `a6cfe37` | feat: wizard de cotización en 4 pasos con algoritmo de precios MPS |
+| `65f2561` | feat: botón WA verde, Conócenos reestructurado, navbar mobile, éxito inline |
+| `3429eeb` | feat: correcciones hero, formulario, navbar mobile y UX |
 
 **Branch activo:** `main`
-**Último deploy en Netlify:** commit `3429eeb` (v1.4)
+**Último deploy en Netlify:** commit `52f64a2` — todo está sincronizado, sin cambios locales pendientes.
 
-### Cambios locales pendientes de commit y push
-Los siguientes archivos están modificados pero **NO han sido pusheados ni desplegados**:
-
-- **`index.html`**: título sección Explorar → "Conoce nuestro trabajo"; botón flotante reemplazado por `<a>` WhatsApp verde
-- **`nosotros.html`**: reestructuración completa del `<main>` — nueva sección "Quiénes somos" + 6 secciones expandidas con layout alternado + botón WA añadido
-- **`servicios.html`**: widget viejo reemplazado por botón WA; número corregido (era `56912345678`, ahora `56954138616`)
-- **`proyectos.html`**: widget viejo reemplazado por botón WA
-- **`css/style.css`**: estilos navbar mobile, botón WA, secciones `.qs-*` y `.nos-exp-*`, mensaje éxito formulario
-- **`js/main.js`**: `initMobileNav()`, eliminado listener widget, mensaje éxito inline, validación tipo andamio
+### Sin cambios locales pendientes
+Todos los archivos están commiteados y desplegados en `https://mps-andamios.netlify.app`.
 
 ### Pendiente / Por hacer
-- **Subir a Netlify** los cambios locales pendientes (commit + push a `main`)
 - Reemplazar `href="#"` en íconos de redes sociales con URLs reales (Instagram, X, Facebook)
 - Subir PDF de documentación HSE → actualizar botón en `nosotros.html` (quitar `detail-link--soon`)
 - Agregar fotos reales al equipo en `nosotros.html` (actualmente usa SVG placeholder)
 - Agregar fotos reales de proyectos en `proyectos.html` (actualmente usa imágenes del hero)
 - Limpiar el HTML residual del panel `.contact-panel` en `index.html` (no es urgente, no afecta UI)
+- Verificar/crear columnas nuevas en tabla `cotizaciones` de Supabase para los campos del wizard (`tipo_trabajo`, `ancho`, `alto`, `fachadas`, `altura_allround`, `nombre_contacto`, `cargo`, `observaciones`, `precio_montaje`, `precio_desmontaje`)
