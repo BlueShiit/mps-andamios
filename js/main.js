@@ -61,20 +61,10 @@ document.addEventListener("click", (e) => {
   const nextBtn  = carousel.querySelector(".ctrl.next");
   const dotsWrap = carousel.querySelector(".dots");
 
-  const autoplayEnabled = carousel.getAttribute("data-autoplay") !== "false";
-  const intervalMs      = Number(carousel.getAttribute("data-interval")) || 6000;
-
   let current = slides.findIndex(s => s.classList.contains("is-active"));
   if (current < 0) current = 0;
 
-  let timerId = null, isPaused = false, startX = null;
-
-  slides.forEach((s, i) => {
-    s.setAttribute("role", "group");
-    s.setAttribute("aria-roledescription", "diapositiva");
-    s.setAttribute("aria-label", `Diapositiva ${i + 1} de ${slides.length}`);
-    s.setAttribute("aria-hidden", i === current ? "false" : "true");
-  });
+  let startX = null;
 
   const dots = slides.map((_, i) => {
     const b = document.createElement("button");
@@ -88,15 +78,11 @@ document.addEventListener("click", (e) => {
 
   function updateUI() {
     slides.forEach((s, i) => {
-      const active = i === current;
-      s.classList.toggle("is-active", active);
-      s.setAttribute("aria-hidden", active ? "false" : "true");
+      s.classList.toggle("is-active", i === current);
+      s.setAttribute("aria-hidden", i === current ? "false" : "true");
     });
     dots.forEach((d, i) => {
-      const active = i === current;
-      d.classList.toggle("active", active);
-      d.setAttribute("aria-selected", active ? "true" : "false");
-      d.setAttribute("tabindex", active ? "0" : "-1");
+      d.classList.toggle("active", i === current);
     });
   }
 
@@ -107,28 +93,8 @@ document.addEventListener("click", (e) => {
   nextBtn?.addEventListener("click", next);
   prevBtn?.addEventListener("click", prev);
 
-  carousel.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
-    if (e.key === "ArrowLeft")  { e.preventDefault(); prev(); }
-  });
-
-  function startAutoplay() {
-    if (!autoplayEnabled || isPaused || timerId) return;
-    timerId = setInterval(next, intervalMs);
-  }
-  function stopAutoplay() {
-    if (timerId) { clearInterval(timerId); timerId = null; }
-  }
-
-  carousel.addEventListener("mouseenter", () => { isPaused = true;  stopAutoplay(); });
-  carousel.addEventListener("mouseleave", () => { isPaused = false; startAutoplay(); });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopAutoplay(); else startAutoplay();
-  });
-
   carousel.addEventListener("touchstart", e => { startX = e.touches[0].clientX; }, { passive: true });
-  carousel.addEventListener("touchend",   e => {
+  carousel.addEventListener("touchend", e => {
     if (startX == null) return;
     const delta = e.changedTouches[0].clientX - startX;
     startX = null;
@@ -136,7 +102,7 @@ document.addEventListener("click", (e) => {
   });
 
   updateUI();
-  startAutoplay();
+  setInterval(next, 5000);
 })();
 
 // ============================
@@ -868,4 +834,15 @@ if (widgetForm && widgetMsg) {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && projModal?.classList.contains("is-open")) closeProjModal();
   });
+})();
+
+// ============================
+// Navbar glass — más opaco al scrollear
+// ============================
+(function initNavbarScroll() {
+  const topbar = document.querySelector(".topbar");
+  if (!topbar) return;
+  const onScroll = () => topbar.classList.toggle("scrolled", window.scrollY > 10);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 })();

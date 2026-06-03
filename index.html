@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
@@ -22,10 +23,10 @@
         <img src="assets/img/logo-mps-definitivo.svg" alt="MPS Andamios">
       </a>
       <nav class="nav" aria-label="principal">
-        <a href="#inicio">Inicio</a>
-        <a href="nosotros.html">Conócenos</a>
+        <a href="#inicio" class="active">Inicio</a>
         <a href="servicios.html">Servicios</a>
         <a href="proyectos.html">Proyectos</a>
+        <a href="nosotros.html">Conócenos</a>
       </nav>
       <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
         <span class="nav-toggle-bar"></span>
@@ -38,32 +39,29 @@
   <main>
     <!-- ===== INICIO / HERO (Carrusel) ===== -->
     <section id="inicio" class="hero hero-slider" aria-label="Destacados">
-      <div class="carousel" data-autoplay="true" data-interval="6000">
+      <div class="carousel" data-autoplay="true" data-interval="3000">
 
         <!-- Slide 1 -->
-        <div class="slide is-active" style="background-image:url('assets/img/hero1.jpg')">
+        <div class="slide is-active" style="background-image:url('assets/img/hero3.jpg')">
           <div class="caption container">
-            <span class="pill animate delay-1">Especialistas en trabajo en altura</span>
-            <h1 id="hero-title" class="animate delay-2">Andamios industriales certificados</h1>
-            <a href="#" class="cta animate delay-3" id="btn-cotizacion">Cotiza tu proyecto</a>
+            <h1 class="animate delay-2">Explora lo que hacemos en obra</h1>
+            <a class="cta animate delay-3" href="servicios.html">Ver servicios</a>
           </div>
         </div>
 
         <!-- Slide 2 -->
         <div class="slide" style="background-image:url('assets/img/hero2.jpg')">
           <div class="caption container">
-            <span class="pill animate delay-1">Conócenos</span>
             <h2 class="animate delay-2">Un equipo. Una forma de trabajar.</h2>
             <a class="cta animate delay-3" href="nosotros.html">Conoce a MPS</a>
           </div>
         </div>
 
         <!-- Slide 3 -->
-        <div class="slide" style="background-image:url('assets/img/hero3.jpg')">
+        <div class="slide" style="background-image:url('assets/img/hero1.jpg')">
           <div class="caption container">
-            <span class="pill animate delay-1">Servicios &amp; Proyectos</span>
-            <h2 class="animate delay-2">Explora lo que hacemos en obra</h2>
-            <a class="cta animate delay-3" href="servicios.html">Ver servicios</a>
+            <h2 class="animate delay-2">Especialistas en montaje y desmontaje de andamios</h2>
+            <a href="#" class="cta animate delay-3" id="btn-cotizacion">Cotiza tu proyecto</a>
           </div>
         </div>
 
@@ -368,20 +366,29 @@
           Conoce nuestros servicios y revisa algunos de los proyectos que hemos desarrollado.
         </p>
 
-        <div class="explore-divider"></div>
+        <div class="explore-cards-grid">
 
-        <div class="grid-explore">
-          <a href="servicios.html" class="explore-card reveal">
-            <img src="assets/img/servicios.jpg" alt="Servicios MPS">
-            <span>Servicios</span>
-            <span class="arrow">→</span>
-          </a>
+          <div class="explore-mini-card reveal">
+            <div class="emc-icon"><i class="ti ti-tools"></i></div>
+            <h3 class="emc-title">Servicios</h3>
+            <p class="emc-desc">Montaje y desmontaje de andamios industriales, supervisión de obras y gestión HSE con personal certificado.</p>
+            <a href="servicios.html" class="emc-link">Ver servicios →</a>
+          </div>
 
-          <a href="proyectos.html" class="explore-card reveal">
-            <img src="assets/img/hero1.jpg" alt="Proyectos MPS">
-            <span>Proyectos</span>
-            <span class="arrow">→</span>
-          </a>
+          <div class="explore-mini-card reveal">
+            <div class="emc-icon"><i class="ti ti-building-factory-2"></i></div>
+            <h3 class="emc-title">Proyectos</h3>
+            <p class="emc-desc">Revisa algunas de las faenas que hemos ejecutado en la Región Metropolitana y más.</p>
+            <a href="proyectos.html" class="emc-link">Ver proyectos →</a>
+          </div>
+
+          <div class="explore-mini-card reveal">
+            <div class="emc-icon"><i class="ti ti-users"></i></div>
+            <h3 class="emc-title">Conócenos</h3>
+            <p class="emc-desc">Conoce el equipo detrás de MPS, nuestra misión, valores y forma de trabajar en cada obra.</p>
+            <a href="nosotros.html" class="emc-link">Conócenos →</a>
+          </div>
+
         </div>
 
       </div>
@@ -633,9 +640,9 @@
         <p class="footer-heading">Navegación</p>
         <ul class="footer-links">
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="nosotros.html">Conócenos</a></li>
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="nosotros.html">Conócenos</a></li>
         </ul>
       </div>
 
