@@ -546,60 +546,49 @@ if (widgetForm && widgetMsg) {
       if (!r2.ok) console.error("Supabase fallback:", r2.error);
     }
 
-    // ── Netlify Forms ──
+    // ── Email (Resend vía /api/cotizacion) ──
     try {
-      const fd = new FormData();
-      fd.set("form-name",       "cotizacion");
-      fd.set("tipo_andamio",    st.sistema);
-      fd.set("tipo_trabajo",    st.tipoTrabajo);
-      fd.set("empresa",         empresa);
-      fd.set("nombre_contacto", nombre);
-      fd.set("cargo",           cargo);
-      fd.set("telefono",        telefono);
-      fd.set("correo",          correo);
-      fd.set("ciudad",          ciudad);
-      if (obs) fd.set("observaciones", obs);
-      if (st.sistema === "blitz") {
-        fd.set("ancho",    inAncho?.value   || "");
-        fd.set("alto",     inAlto?.value    || "");
-        fd.set("fachadas", st.fachadas);
-        fd.set("m2_blitz", c?.m2 ?? "");
-      } else {
-        fd.set("kg_allround",     inKg?.value     || "");
-        fd.set("altura_allround", inAltura?.value || "");
-      }
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(fd).toString(),
-      });
-    } catch (e) { console.warn("Netlify Forms:", e); }
+      const tipoLabel = {
+        "montaje-desmontaje": "Montaje y desmontaje",
+        "solo-montaje":       "Solo montaje",
+        "solo-desmontaje":    "Solo desmontaje",
+        "supervision":        "Supervisión de obra",
+      }[st.tipoTrabajo] || st.tipoTrabajo;
 
-    // ── Email ──
-    try {
-      await fetch("/.netlify/functions/send-mail", {
+      const resendRes = await fetch("/api/cotizacion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          origen:      "cotizacion",
-          sistema:     st.sistema,
-          tipoTrabajo: st.tipoTrabajo,
-          ...(st.sistema === "blitz" ? {
-            ancho:    parseFloat(inAncho?.value)  || 0,
-            alto:     parseFloat(inAlto?.value)   || 0,
-            fachadas: st.fachadas,
-            m2:       c?.m2,
-          } : {
-            kg:             parseFloat(inKg?.value)     || 0,
-            alturaAllround: parseFloat(inAltura?.value) || 0,
-            metodoIzaje:    c?.metodo,
-          }),
-          calc: c,
+          sistema:           st.sistema === "blitz" ? "Blitz (fachada)" : "Allround (pesaje)",
+          tipo:              tipoLabel,
+          ancho:             parseFloat(inAncho?.value)   || 0,
+          alto:              parseFloat(inAlto?.value)    || 0,
+          fachadas:          st.fachadas,
+          kg:                parseFloat(inKg?.value)      || 0,
+          alturaMaxima:      st.sistema === "blitz"
+                               ? parseFloat(inAlto?.value)   || 0
+                               : parseFloat(inAltura?.value) || 0,
+          metodoIzaje:       c?.metodo  || "",
+          m2:                c?.m2      || 0,
+          dias:              (c?.diasM  || 0) + (c?.diasD || 0),
+          precioMontaje:     c?.precioM || 0,
+          precioDesm:        c?.precioD || 0,
+          total:             c?.total   || 0,
+          costoTrabajadores: c?.costoTrab || 0,
+          utilidad:          c?.utilidad  || 0,
+          recargo:           String(c?.recargo || 1),
           empresa, nombre, cargo, telefono, correo, ciudad,
-          observaciones: obs,
+          observaciones:     obs,
         }),
       });
-    } catch (e) { console.warn("send-mail:", e); }
+      const resendData = await resendRes.json();
+      console.log("Resend status:", resendRes.status, resendData);
+      if (!resendRes.ok) {
+        console.error("Error Resend:", resendData);
+      }
+    } catch (e) {
+      console.error("Error fetch cotizacion:", e);
+    }
 
     goToStep(4);
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Enviar cotización"; }
