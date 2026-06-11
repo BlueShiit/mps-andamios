@@ -1,24 +1,10 @@
 {
-  "name": "mps",
+  "name": "mps-andamios",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo 'Static site'"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BlueShiit/MPS.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/BlueShiit/MPS/issues"
-  },
-  "homepage": "https://github.com/BlueShiit/MPS#readme",
   "dependencies": {
-    "nodemailer": "^8.0.1"
+    "resend": "^6.12.4"
   }
 }
