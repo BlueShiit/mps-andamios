@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/nosotros", "destination": "/nosotros.html" },
+    { "source": "/servicios", "destination": "/servicios.html" },
+    { "source": "/proyectos", "destination": "/proyectos.html" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}
