@@ -2,6 +2,10 @@ const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const LOGO_URL = 'https://mps-andamios-git-main-ian-perez-s-projects.vercel.app/assets/img/logo-mps.svg';
+const LOGO_IMG = `<img src="${LOGO_URL}" width="40" height="40" alt="MPS" style="display:block">`;
+const LOGO_DIV = `<div style="background:#F4C430;width:56px;height:56px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0">${LOGO_IMG}</div>`;
+
 module.exports = async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   if (req.method !== 'POST') {
@@ -16,6 +20,7 @@ module.exports = async (req, res) => {
       empresa, nombre, cargo, telefono, correo, ciudad, observaciones
     } = req.body;
 
+    // ── Email admin ──
     await resend.emails.send({
       from: 'MPS Cotizaciones <onboarding@resend.dev>',
       to: ['ian.perez.illanes1@gmail.com'],
@@ -28,45 +33,7 @@ module.exports = async (req, res) => {
 
           <!-- Header -->
           <div style="background:#3D4A2E;padding:20px 24px;display:flex;align-items:center;gap:12px">
-            <div style="background:#F4C430;width:56px;height:56px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 390" width="44" height="44">
-                <line x1="115" y1="122" x2="250" y2="52" stroke="#d4a020" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="165" y1="122" x2="302" y2="52" stroke="#d4a020" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="115" y1="52" x2="250" y2="122" stroke="#4d78c9" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="165" y1="52" x2="302" y2="122" stroke="#4d78c9" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="115" y1="52" x2="302" y2="52" stroke="#1c2d5e" stroke-width="5" stroke-linecap="round"/>
-                <line x1="115" y1="122" x2="302" y2="122" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
-                <line x1="165" y1="168" x2="250" y2="168" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
-                <line x1="165" y1="52" x2="165" y2="168" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
-                <line x1="250" y1="52" x2="250" y2="168" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
-                <line x1="115" y1="52" x2="115" y2="192" stroke="#1c2d5e" stroke-width="5.5" stroke-linecap="round"/>
-                <line x1="302" y1="52" x2="302" y2="192" stroke="#1c2d5e" stroke-width="5.5" stroke-linecap="round"/>
-                <line x1="208" y1="8" x2="165" y2="52" stroke="#1c2d5e" stroke-width="5" stroke-linecap="round"/>
-                <line x1="208" y1="8" x2="250" y2="52" stroke="#1c2d5e" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="208" cy="8" r="6" fill="#1c2d5e"/>
-                <circle cx="115" cy="52" r="5.5" fill="#1c2d5e"/>
-                <circle cx="165" cy="52" r="5" fill="#1c2d5e"/>
-                <circle cx="250" cy="52" r="5" fill="#1c2d5e"/>
-                <circle cx="302" cy="52" r="5.5" fill="#1c2d5e"/>
-                <circle cx="115" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="165" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="250" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="302" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="165" cy="168" r="4.5" fill="#1c2d5e"/>
-                <circle cx="250" cy="168" r="4.5" fill="#1c2d5e"/>
-                <circle cx="115" cy="192" r="5" fill="#1c2d5e"/>
-                <circle cx="302" cy="192" r="5" fill="#1c2d5e"/>
-                <line x1="108" y1="192" x2="122" y2="192" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
-                <line x1="295" y1="192" x2="309" y2="192" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
-                <text x="72" y="318" font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif" font-size="190" fill="#1c2d5e">M</text>
-                <text x="210" y="318" font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif" font-size="190" fill="#1c2d5e">P</text>
-                <text x="322" y="318" font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif" font-size="190" fill="#d4a020">S</text>
-                <text x="250" y="348" font-family="'Arial Black',Impact,'Helvetica Neue',Arial,sans-serif" font-size="19.5" font-weight="900" fill="#1c2d5e" text-anchor="middle" letter-spacing="2.5">MONTAJES PROFESIONALES</text>
-                <line x1="40" y1="368" x2="150" y2="368" stroke="#d4a020" stroke-width="2.5"/>
-                <text x="250" y="374" font-family="'Arial Black',Impact,'Helvetica Neue',Arial,sans-serif" font-size="17" font-weight="900" fill="#d4a020" text-anchor="middle" letter-spacing="5">Y SOLUCIONES</text>
-                <line x1="352" y1="368" x2="462" y2="368" stroke="#d4a020" stroke-width="2.5"/>
-              </svg>
-            </div>
+            ${LOGO_DIV}
             <div>
               <h2 style="color:#fff;font-size:15px;font-weight:500;margin:0">Nueva solicitud de cotización</h2>
               <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:3px 0 0">${new Date().toLocaleDateString('es-CL', {weekday:'long',year:'numeric',month:'long',day:'numeric'})} · ${new Date().toLocaleTimeString('es-CL', {hour:'2-digit',minute:'2-digit'})} hrs</p>
@@ -134,7 +101,9 @@ module.exports = async (req, res) => {
         </html>
       `
     });
+    console.log('Email MPS enviado');
 
+    // ── Email cliente ──
     await resend.emails.send({
       from: 'MPS Cotizaciones <onboarding@resend.dev>',
       to: [correo],
@@ -146,45 +115,7 @@ module.exports = async (req, res) => {
         <body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:0">
 
           <div style="background:#3D4A2E;padding:20px 24px">
-            <div style="background:#F4C430;width:56px;height:56px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;margin-bottom:8px">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 390" width="44" height="44">
-                <line x1="115" y1="122" x2="250" y2="52" stroke="#d4a020" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="165" y1="122" x2="302" y2="52" stroke="#d4a020" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="115" y1="52" x2="250" y2="122" stroke="#4d78c9" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="165" y1="52" x2="302" y2="122" stroke="#4d78c9" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="115" y1="52" x2="302" y2="52" stroke="#1c2d5e" stroke-width="5" stroke-linecap="round"/>
-                <line x1="115" y1="122" x2="302" y2="122" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
-                <line x1="165" y1="168" x2="250" y2="168" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
-                <line x1="165" y1="52" x2="165" y2="168" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
-                <line x1="250" y1="52" x2="250" y2="168" stroke="#1c2d5e" stroke-width="4.5" stroke-linecap="round"/>
-                <line x1="115" y1="52" x2="115" y2="192" stroke="#1c2d5e" stroke-width="5.5" stroke-linecap="round"/>
-                <line x1="302" y1="52" x2="302" y2="192" stroke="#1c2d5e" stroke-width="5.5" stroke-linecap="round"/>
-                <line x1="208" y1="8" x2="165" y2="52" stroke="#1c2d5e" stroke-width="5" stroke-linecap="round"/>
-                <line x1="208" y1="8" x2="250" y2="52" stroke="#1c2d5e" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="208" cy="8" r="6" fill="#1c2d5e"/>
-                <circle cx="115" cy="52" r="5.5" fill="#1c2d5e"/>
-                <circle cx="165" cy="52" r="5" fill="#1c2d5e"/>
-                <circle cx="250" cy="52" r="5" fill="#1c2d5e"/>
-                <circle cx="302" cy="52" r="5.5" fill="#1c2d5e"/>
-                <circle cx="115" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="165" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="250" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="302" cy="122" r="5" fill="#1c2d5e"/>
-                <circle cx="165" cy="168" r="4.5" fill="#1c2d5e"/>
-                <circle cx="250" cy="168" r="4.5" fill="#1c2d5e"/>
-                <circle cx="115" cy="192" r="5" fill="#1c2d5e"/>
-                <circle cx="302" cy="192" r="5" fill="#1c2d5e"/>
-                <line x1="108" y1="192" x2="122" y2="192" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
-                <line x1="295" y1="192" x2="309" y2="192" stroke="#1c2d5e" stroke-width="4" stroke-linecap="round"/>
-                <text x="72" y="318" font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif" font-size="190" fill="#1c2d5e">M</text>
-                <text x="210" y="318" font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif" font-size="190" fill="#1c2d5e">P</text>
-                <text x="322" y="318" font-family="Impact,'Franklin Gothic Heavy','Arial Narrow',Arial,sans-serif" font-size="190" fill="#d4a020">S</text>
-                <text x="250" y="348" font-family="'Arial Black',Impact,'Helvetica Neue',Arial,sans-serif" font-size="19.5" font-weight="900" fill="#1c2d5e" text-anchor="middle" letter-spacing="2.5">MONTAJES PROFESIONALES</text>
-                <line x1="40" y1="368" x2="150" y2="368" stroke="#d4a020" stroke-width="2.5"/>
-                <text x="250" y="374" font-family="'Arial Black',Impact,'Helvetica Neue',Arial,sans-serif" font-size="17" font-weight="900" fill="#d4a020" text-anchor="middle" letter-spacing="5">Y SOLUCIONES</text>
-                <line x1="352" y1="368" x2="462" y2="368" stroke="#d4a020" stroke-width="2.5"/>
-              </svg>
-            </div>
+            <div style="margin-bottom:8px">${LOGO_DIV}</div>
             <h2 style="color:#fff;font-size:15px;font-weight:500;margin:0">Cotización recibida</h2>
             <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:4px 0 0">Te contactaremos en menos de 2 horas hábiles</p>
           </div>
@@ -235,6 +166,7 @@ module.exports = async (req, res) => {
         </html>
       `
     });
+    console.log('Email cliente enviado a:', correo);
 
     return res.status(200).json({ ok: true });
   } catch (error) {
