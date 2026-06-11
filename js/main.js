@@ -510,41 +510,6 @@ if (widgetForm && widgetMsg) {
     const obs = inObs?.value.trim() || "";
     const c   = calcularObra();
 
-    // ── Supabase ──
-    const payloadFull = {
-      tipo_andamio: st.sistema,
-      tipo_trabajo: st.tipoTrabajo,
-      ...(st.sistema === "blitz" ? {
-        ancho:    parseFloat(inAncho?.value)  || null,
-        fachadas: st.fachadas,
-        m2_blitz: c?.m2 ?? null,
-      } : {
-        kg_allround:     parseFloat(inKg?.value)     || null,
-        altura_allround: parseFloat(inAltura?.value) || null,
-      }),
-      empresa,
-      nombre_contacto: nombre,
-      cargo,
-      telefono,
-      correo,
-      ciudad,
-      observaciones:     obs || null,
-      precio_montaje:    c?.precioM  ?? null,
-      precio_desmontaje: c?.precioD  ?? null,
-      precio_total:      c?.total    ?? null,
-      created_at: new Date().toISOString(),
-    };
-
-    const r1 = await sendQuoteToSupabase(payloadFull);
-    if (!r1.ok) {
-      console.warn("Supabase full payload:", r1.error);
-      const r2 = await sendQuoteToSupabase({
-        tipo_andamio: st.sistema, empresa, telefono, correo, ciudad,
-        created_at: new Date().toISOString(),
-      });
-      if (!r2.ok) console.error("Supabase fallback:", r2.error);
-    }
-
     // ── Email (Resend vía /api/cotizacion) ──
     try {
       const tipoLabel = {
