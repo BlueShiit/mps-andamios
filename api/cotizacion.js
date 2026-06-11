@@ -21,6 +21,7 @@ module.exports = async (req, res) => {
     } = req.body;
 
     // ── Email admin ──
+    try {
     await resend.emails.send({
       from: 'MPS Cotizaciones <onboarding@resend.dev>',
       to: ['ian.perez.illanes1@gmail.com'],
@@ -101,9 +102,13 @@ module.exports = async (req, res) => {
         </html>
       `
     });
-    console.log('Email MPS enviado');
+      console.log('Email MPS enviado OK');
+    } catch(e) {
+      console.error('Error email MPS:', e.message);
+    }
 
     // ── Email cliente ──
+    try {
     await resend.emails.send({
       from: 'MPS Cotizaciones <onboarding@resend.dev>',
       to: [correo],
@@ -166,7 +171,10 @@ module.exports = async (req, res) => {
         </html>
       `
     });
-    console.log('Email cliente enviado a:', correo);
+      console.log('Email cliente enviado OK a:', correo);
+    } catch(e) {
+      console.error('Error email cliente:', e.message, 'destinatario:', correo);
+    }
 
     return res.status(200).json({ ok: true });
   } catch (error) {
