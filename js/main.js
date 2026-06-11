@@ -516,7 +516,6 @@ if (widgetForm && widgetMsg) {
       tipo_trabajo: st.tipoTrabajo,
       ...(st.sistema === "blitz" ? {
         ancho:    parseFloat(inAncho?.value)  || null,
-        alto:     parseFloat(inAlto?.value)   || null,
         fachadas: st.fachadas,
         m2_blitz: c?.m2 ?? null,
       } : {
