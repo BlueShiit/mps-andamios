@@ -99,6 +99,71 @@ module.exports = async (req, res) => {
       `
     });
 
+    await resend.emails.send({
+      from: 'MPS Cotizaciones <onboarding@resend.dev>',
+      to: [correo],
+      subject: `Tu cotización fue recibida — MPS Montajes Profesionales`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8"></head>
+        <body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:0">
+
+          <div style="background:#3D4A2E;padding:20px 24px">
+            <div style="background:#F4C430;width:38px;height:38px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <span style="color:#3D4A2E;font-size:18px;font-weight:bold">M</span>
+            </div>
+            <h2 style="color:#fff;font-size:15px;font-weight:500;margin:0">Cotización recibida</h2>
+            <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:4px 0 0">Te contactaremos en menos de 2 horas hábiles</p>
+          </div>
+
+          <div style="padding:20px 24px;background:#ffffff">
+            <p style="font-size:13px;color:#555;line-height:1.6;margin:0 0 16px">
+              Hola <strong style="color:#333">${nombre}</strong>, recibimos tu solicitud de cotización para <strong style="color:#333">${empresa}</strong>. El equipo MPS revisará los detalles y te contactará a la brevedad.
+            </p>
+
+            <p style="font-size:10px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #eee">Resumen de tu solicitud</p>
+            <table style="width:100%;font-size:12px;border-collapse:collapse">
+              <tr><td style="color:#888;padding:5px 0;border-bottom:1px solid #f5f5f5">Sistema</td><td style="text-align:right;font-weight:500;padding:5px 0;border-bottom:1px solid #f5f5f5">${sistema}</td></tr>
+              <tr><td style="color:#888;padding:5px 0;border-bottom:1px solid #f5f5f5">Tipo de trabajo</td><td style="text-align:right;font-weight:500;padding:5px 0;border-bottom:1px solid #f5f5f5">${tipo}</td></tr>
+              <tr><td style="color:#888;padding:5px 0;border-bottom:1px solid #f5f5f5">Ciudad</td><td style="text-align:right;font-weight:500;padding:5px 0;border-bottom:1px solid #f5f5f5">${ciudad}</td></tr>
+              <tr><td style="color:#888;padding:5px 0">Días estimados</td><td style="text-align:right;font-weight:500;padding:5px 0">${dias} días hábiles</td></tr>
+            </table>
+
+            <div style="background:#EAF3DE;border-radius:8px;padding:14px 16px;margin:16px 0">
+              <table style="width:100%;font-size:12px;border-collapse:collapse">
+                <tr><td style="color:#27500A;padding:5px 0;border-bottom:1px solid rgba(61,74,46,0.15)">Estimado montaje</td><td style="text-align:right;font-weight:500;color:#27500A;padding:5px 0;border-bottom:1px solid rgba(61,74,46,0.15)">$${parseInt(precioMontaje).toLocaleString('es-CL')}</td></tr>
+                <tr><td style="color:#27500A;padding:5px 0">Estimado desmontaje</td><td style="text-align:right;font-weight:500;color:#27500A;padding:5px 0">$${parseInt(precioDesm).toLocaleString('es-CL')}</td></tr>
+              </table>
+              <div style="border-top:1px solid rgba(61,74,46,0.25);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:13px;font-weight:500;color:#3D4A2E">Estimado total</span>
+                <span style="font-size:20px;font-weight:500;color:#3D4A2E">$${parseInt(total).toLocaleString('es-CL')}</span>
+              </div>
+            </div>
+
+            <p style="font-size:11px;color:#aaa;margin:0 0 16px">Valor referencial. MPS confirmará el precio exacto al contactarte.</p>
+
+            <div style="background:#3D4A2E;border-radius:8px;padding:14px 16px;text-align:center;margin:16px 0">
+              <p style="color:rgba(255,255,255,0.8);font-size:12px;margin:0 0 10px">¿Tienes dudas o quieres agilizar tu cotización?</p>
+              <a href="https://wa.me/56954138616" style="display:inline-block;background:#F4C430;color:#3D4A2E;font-size:12px;font-weight:500;padding:8px 20px;border-radius:6px;text-decoration:none">Escríbenos por WhatsApp</a>
+            </div>
+
+            <p style="font-size:10px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #eee">Datos de contacto MPS</p>
+            <table style="width:100%;font-size:12px;border-collapse:collapse">
+              <tr><td style="color:#888;padding:5px 0;border-bottom:1px solid #f5f5f5">Teléfono / WhatsApp</td><td style="text-align:right;font-weight:500;padding:5px 0;border-bottom:1px solid #f5f5f5">+56 9 5413 8616</td></tr>
+              <tr><td style="color:#888;padding:5px 0;border-bottom:1px solid #f5f5f5">Correo</td><td style="text-align:right;font-weight:500;padding:5px 0;border-bottom:1px solid #f5f5f5">arturoperezm2015@gmail.com</td></tr>
+              <tr><td style="color:#888;padding:5px 0">Web</td><td style="text-align:right;font-weight:500;padding:5px 0">mps-andamios.vercel.app</td></tr>
+            </table>
+          </div>
+
+          <div style="background:#f5f5f5;padding:12px 24px;font-size:11px;color:#aaa;text-align:center">
+            MPS — Montajes Profesionales &amp; Soluciones · mps-andamios.vercel.app · Este correo fue generado automáticamente.
+          </div>
+        </body>
+        </html>
+      `
+    });
+
     return res.status(200).json({ ok: true });
   } catch (error) {
     console.error('Error en cotizacion:', error);
