@@ -3,32 +3,6 @@
 // ============================
 
 // ============================
-// 0) SUPABASE CONFIG
-// ============================
-const SUPABASE_URL      = "https://orwnsptmtraujxmeqwph.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_aLZbgzCt2ahyxFkVMD4AqQ_TcaTTV-Y";
-
-function getSupabaseClient() {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
-  if (!window.supabase?.createClient) return null;
-  return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-
-const sb = getSupabaseClient();
-
-async function sendContactToSupabase(payload) {
-  if (!sb) return { ok: false, error: "Supabase no cargado." };
-  const { error } = await sb.from("contactos").insert([payload]);
-  return error ? { ok: false, error: error.message } : { ok: true };
-}
-
-async function sendQuoteToSupabase(payload) {
-  if (!sb) return { ok: false, error: "Supabase no cargado." };
-  const { error } = await sb.from("cotizaciones").insert([payload]);
-  return error ? { ok: false, error: error.message } : { ok: true };
-}
-
-// ============================
 // 1) Año dinámico
 // ============================
 const yearEl = document.getElementById("year");
@@ -153,44 +127,9 @@ document.addEventListener("click", (e) => {
 // ============================
 const contactClose = document.querySelector(".contact-close");
 const contactPanel = document.querySelector(".contact-panel");
-const widgetForm   = document.getElementById("widget-form");
-const widgetMsg    = document.getElementById("w-msg");
 
 if (contactClose && contactPanel) {
   contactClose.addEventListener("click", () => contactPanel.classList.remove("is-open"));
-}
-
-if (widgetForm && widgetMsg) {
-  widgetForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    const nombre  = document.getElementById("w-nombre")?.value.trim();
-    const correo  = document.getElementById("w-correo")?.value.trim();
-    const mensaje = document.getElementById("w-mensaje")?.value.trim();
-
-    if (!nombre || !correo || !mensaje) {
-      widgetMsg.textContent = "Por favor completa todos los campos.";
-      widgetMsg.style.color = "red";
-      return;
-    }
-
-    widgetMsg.textContent = "Enviando…";
-    widgetMsg.style.color = "#334155";
-
-    const res = await sendContactToSupabase({
-      nombre, correo, mensaje, created_at: new Date().toISOString(),
-    });
-
-    if (!res.ok) {
-      console.error("Supabase contactos:", res.error);
-      widgetMsg.textContent = "❌ No se pudo enviar.";
-      widgetMsg.style.color = "red";
-      return;
-    }
-
-    widgetMsg.textContent = "✅ Mensaje enviado. Te contactaremos pronto.";
-    widgetMsg.style.color = "green";
-    widgetForm.reset();
-  });
 }
 
 // ============================
@@ -461,8 +400,8 @@ if (widgetForm && widgetMsg) {
   // ── Step 3 → 2 ──
   document.getElementById("qw-prev-3")?.addEventListener("click", () => goToStep(2));
 
-  // ── Submit ──
-  document.getElementById("qw-submit")?.addEventListener("click", async () => {
+  // ── Submit — solo valida y muestra paso 4 ──
+  document.getElementById("qw-submit")?.addEventListener("click", () => {
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     const empresa = inEmpresa?.value.trim()  || "";
     const nombre  = inNombre?.value.trim()   || "";
@@ -489,73 +428,21 @@ if (widgetForm && widgetMsg) {
       if (!pass) ok = false;
     });
 
-    const digits  = telRaw.replace(/\D/g, "");
-    let telefono  = null;
+    const digits   = telRaw.replace(/\D/g, "");
     const errTelEl = document.getElementById("err-tel");
     if (prefijo === "+56") {
-      if (/^9\d{8}$/.test(digits))      telefono = "56" + digits;
-      else if (/^569\d{8}$/.test(digits)) telefono = digits;
-      else { if (errTelEl) errTelEl.hidden = false; ok = false; }
+      if (!/^9\d{8}$/.test(digits) && !/^569\d{8}$/.test(digits)) {
+        if (errTelEl) errTelEl.hidden = false; ok = false;
+      } else if (errTelEl) errTelEl.hidden = true;
     } else {
-      if (digits.length >= 7 && digits.length <= 12) telefono = prefijo.replace("+", "") + digits;
-      else { if (errTelEl) errTelEl.hidden = false; ok = false; }
+      if (digits.length < 7 || digits.length > 12) {
+        if (errTelEl) errTelEl.hidden = false; ok = false;
+      } else if (errTelEl) errTelEl.hidden = true;
     }
-    if (ok && errTelEl) errTelEl.hidden = true;
 
     if (!ok) return;
 
-    const submitBtn = document.getElementById("qw-submit");
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Enviando…"; }
-
-    const obs = inObs?.value.trim() || "";
-    const c   = calcularObra();
-
-    // ── Email (Resend vía /api/cotizacion) ──
-    try {
-      const tipoLabel = {
-        "montaje-desmontaje": "Montaje y desmontaje",
-        "solo-montaje":       "Solo montaje",
-        "solo-desmontaje":    "Solo desmontaje",
-        "supervision":        "Supervisión de obra",
-      }[st.tipoTrabajo] || st.tipoTrabajo;
-
-      const resendRes = await fetch("/api/cotizacion", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sistema:           st.sistema === "blitz" ? "Blitz (fachada)" : "Allround (pesaje)",
-          tipo:              tipoLabel,
-          ancho:             parseFloat(inAncho?.value)   || 0,
-          alto:              parseFloat(inAlto?.value)    || 0,
-          fachadas:          st.fachadas,
-          kg:                parseFloat(inKg?.value)      || 0,
-          alturaMaxima:      st.sistema === "blitz"
-                               ? parseFloat(inAlto?.value)   || 0
-                               : parseFloat(inAltura?.value) || 0,
-          metodoIzaje:       c?.metodo  || "",
-          m2:                c?.m2      || 0,
-          dias:              (c?.diasM  || 0) + (c?.diasD || 0),
-          precioMontaje:     c?.precioM || 0,
-          precioDesm:        c?.precioD || 0,
-          total:             c?.total   || 0,
-          costoTrabajadores: c?.costoTrab || 0,
-          utilidad:          c?.utilidad  || 0,
-          recargo:           String(c?.recargo || 1),
-          empresa, nombre, cargo, telefono, correo, ciudad,
-          observaciones:     obs,
-        }),
-      });
-      const resendData = await resendRes.json();
-      console.log("Resend status:", resendRes.status, resendData);
-      if (!resendRes.ok) {
-        console.error("Error Resend:", resendData);
-      }
-    } catch (e) {
-      console.error("Error fetch cotizacion:", e);
-    }
-
     goToStep(4);
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Enviar cotización"; }
   });
 
   // ── Paso 4: cerrar ──
