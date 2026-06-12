@@ -12,11 +12,13 @@ Responde siempre en **español**.
 |---|---|
 | Frontend | HTML5, CSS3 personalizado, JavaScript vanilla (ES2020+) |
 | Tipografía | Google Fonts — Inter (400, 600, 800) + Tabler Icons (webfont, CDN, solo en `index.html`) |
-| Base de datos | Supabase (PostgreSQL) vía SDK JS (`@supabase/supabase-js@2`, CDN) — solo para contactos |
 | Hosting / Deploy | Vercel (sitio estático + Serverless Functions en `api/`) |
 | Funciones serverless | Vercel Functions (Node.js CommonJS, carpeta `api/`) |
 | Envío de correo | Resend SDK (`resend ^6.12.4`) vía `api/cotizacion.js` |
 | Control de versiones | Git — repositorio en GitHub (`BlueShiit/mps-andamios`) |
+
+> **Supabase:** eliminado completamente de `main.js`. Ya no se usa en ninguna parte del frontend.
+> **Netlify:** eliminado completamente. No quedan referencias en ningún archivo del proyecto.
 
 ### Variables de entorno
 | Variable | Dónde | Descripción |
@@ -27,8 +29,6 @@ Responde siempre en **español**.
 - Email de contacto: `arturoperezm2015@gmail.com`
 - Email notificaciones (destino emails de cotización): `ian.perez.illanes1@gmail.com`
 - WhatsApp: `+56 9 5413 8616` → URL: `https://wa.me/56954138616?text=Hola%20MPS,%20me%20gustaría%20cotizar.`
-- Supabase URL: `https://orwnsptmtraujxmeqwph.supabase.co`
-- Supabase Project Ref: `orwnsptmtraujxmeqwph`
 - Vercel Project ID: `prj_JEbYnq51xbsLpfHt07VDwFM7rqS9`
 - Vercel Team: `ian-perez-s-projects`
 - Vercel URL producción: `https://mps-andamios.vercel.app`
@@ -36,8 +36,8 @@ Responde siempre en **español**.
 - Ubicación: Puente Alto, Región Metropolitana, Chile
 
 ### Acceso a infraestructura desde Claude Code
-- **Vercel CLI**: instalado (`v54.9.0`). Proyecto vinculado con `vercel link`. Comandos: `vercel logs`, `vercel env ls`, `vercel ls`.
-- **Supabase Management API**: requiere Personal Access Token (PAT) de `supabase.com/dashboard/account/tokens`.
+- **Vercel CLI**: instalado (`v54.9.0`). Proyecto vinculado con `vercel link`. Comandos: `vercel logs --expand`, `vercel env ls`, `vercel ls`.
+- **Supabase**: eliminado. No hay credenciales activas en el proyecto.
 - **psql / Supabase CLI**: no instalados en el equipo. Homebrew tampoco instalado.
 
 ---
@@ -133,7 +133,7 @@ Cada página tiene `class="active"` en su enlace correspondiente → color blanc
 ### Modal de cotización — Wizard 4 pasos
 - Presente en: `index.html`, `servicios.html`, `proyectos.html`
 - Se abre con `id="btn-cotizacion"`, clase `.js-abrir-cotizacion`, o URL `?cotizar=1`
-- **Flujo actual:** validación → `POST /api/cotizacion` con Resend (sin Supabase, sin Netlify Forms)
+- **Flujo actual:** validación → `POST /api/cotizacion` con Resend → muestra paso 4 (éxito)
 
 **Estructura:**
 | Panel | ID | Contenido |
@@ -141,33 +141,52 @@ Cada página tiene `class="active"` en su enlace correspondiente → color blanc
 | Paso 1 | `#qw-panel-1` | Sistema (Blitz/Allround) + tipo de trabajo |
 | Paso 2 | `#qw-panel-2` | Dimensiones + cálculo en tiempo real |
 | Paso 3 | `#qw-panel-3` | Datos de contacto |
-| Paso 4 | `#qw-panel-4` | Confirmación de envío |
+| Paso 4 | `#qw-panel-4` | Mensaje de éxito (sin lógica adicional) |
+
+**Paso 3 — campos del formulario:**
+- Empresa, nombre, cargo
+- Teléfono con selector de prefijo: 🇨🇱 +56 (default), 🇦🇷 +54, 🇵🇪 +51, 🇧🇴 +591
+- Correo electrónico
+- Ciudad/Comuna (`<select>` con comunas de la RM + otras ciudades)
+- Observaciones (opcional)
 
 ### Algoritmo de cotización (`calcularObra()`)
 
-**Blitz:** `m² = ancho × alto × fachadas` → `precioM = m² × $1.800`, `precioD = m² × $1.500`
-**Allround:** `precioM = kg × $380`, `precioD = kg × $350`
-**Ambos:** `costoTrab = diasActivos × $240.000 × recargo` (recargo 1.5 si altura > 10m)
+**Blitz:**
+- `m² = ancho × alto × fachadas`
+- `precioM = m² × $1.800`, `precioD = m² × $1.500`
+- Rendimiento: 200 m²/día hasta 10m / 100 m²/día sobre 10m
+- Recargo +50% si altura > 10m
+
+**Allround:**
+- `precioM = kg × $380`, `precioD = kg × $350`
+- Rendimiento: 2.400 kg/día hasta 10m / 1.200 kg/día sobre 10m
+- Recargo +50% si altura > 10m
+
+**Ambos:** `costoTrab = diasActivos × $240.000 × recargo` — días siempre redondeados con `Math.ceil`
 
 ### Función serverless de emails (`api/cotizacion.js`)
 
 Recibe `POST` con todos los campos del wizard y envía **dos emails con Resend**:
 
-| Email | Destinatario | Contenido |
+| Email | Destinatario | Estado |
 |---|---|---|
-| Admin | `ian.perez.illanes1@gmail.com` | Datos obra, precios, desglose interno MPS, contacto |
-| Cliente | `correo` del formulario | Confirmación, resumen, estimado de precios, botón WhatsApp |
+| Admin | `ian.perez.illanes1@gmail.com` | ✅ Llega correctamente |
+| Cliente | `correo` del formulario | ⚠️ No entrega — restricción Resend sandbox |
 
 **Detalles de implementación:**
-- `from`: `MPS Cotizaciones <onboarding@resend.dev>` (dominio de prueba Resend — cambiar al verificar `mps-andamios.cl`)
-- Cada `resend.emails.send()` tiene su propio `try/catch` independiente — si uno falla el otro igual se envía
-- Logo en headers: `<img>` con URL hosteada `https://mps-andamios-git-main-ian-perez-s-projects.vercel.app/assets/img/logo-mps.svg`
-- Logs de debug: `console.log('Email MPS enviado OK')` / `console.log('Email cliente enviado OK a:', correo)`
-- La función siempre devuelve `200 { ok: true }` aunque un email falle
-- El catch exterior solo captura errores de `req.body` o setup
+- `from: 'onboarding@resend.dev'` — dominio de prueba de Resend
+- Un solo bloque `try/catch`: si falla cualquier email, devuelve `500 { ok: false, error }`
+- Si ambos llegan bien, devuelve `200 { ok: true }`
+- Logo en headers: `<img>` con URL absoluta hosteada en Vercel rama main (SVG inline no renderiza en Gmail)
+
+**Restricción crítica conocida:** con `onboarding@resend.dev` Resend solo entrega físicamente al email de la cuenta Resend (`ian.perez.illanes1@gmail.com`). El email al cliente es aceptado por la API (devuelve 200) pero **nunca se entrega**. Para que llegue a clientes, hay que verificar el dominio `mps-andamios.cl` en Resend.
 
 **Campos enviados desde `main.js` al endpoint:**
 `sistema`, `tipo`, `ancho`, `alto`, `fachadas`, `kg`, `alturaMaxima`, `metodoIzaje`, `m2`, `dias`, `precioMontaje`, `precioDesm`, `total`, `costoTrabajadores`, `utilidad`, `recargo`, `empresa`, `nombre`, `cargo`, `telefono`, `correo`, `ciudad`, `observaciones`
+
+### Widget de contacto (`index.html`)
+El panel `.contact-panel` existe en el HTML pero el formulario ya **no envía a ningún servicio**. Solo tiene el botón de cierre funcional. Pendiente de limpiar o reconectar.
 
 ### JS — funciones y módulos en `main.js`
 | Función / Módulo | Descripción |
@@ -175,15 +194,16 @@ Recibe `POST` con todos los campos del wizard y envía **dos emails con Resend**
 | `initHeroSlider()` | Slider con `setInterval(next, 5000)`, swipe táctil, flechas, barritas |
 | `initSlideTextAnimations()` | MutationObserver — resetea `.animate` al cambiar slide activo |
 | `initScrollReveal()` | IntersectionObserver sobre `.reveal` |
-| `initQuoteWizard()` | IIFE wizard: estado, navegación, cálculo, validación, envío |
+| `initQuoteWizard()` | IIFE wizard: estado, navegación, cálculo, validación, fetch a `/api/cotizacion` |
 | `calcularObra()` | Algoritmo de precios MPS |
 | `renderCalc(c)` | Caja `.qw-calc` en tiempo real |
 | `goToStep(n)` | Navega pasos del wizard |
 | `initMobileNav()` | Hamburguesa toggle, cierre al clic fuera |
 | `initNavbarScroll()` | Añade `.scrolled` al `.topbar` cuando `scrollY > 10px` |
-| Tabs (servicios.html) | Switch por `data-tab` |
+| Tabs (`servicios.html`) | Switch por `data-tab` |
 | Filtro proyectos | `.filtro-btn` filtra `.proj-card` |
 | Modal proyecto | `.proj-card-btn` → `.proj-modal` |
+| Lightbox galería | `.gallery-image` → `#lightbox` con flechas y teclado |
 
 ---
 
@@ -209,16 +229,17 @@ Recibe `POST` con todos los campos del wizard y envía **dos emails con Resend**
 
 ## Decisiones técnicas importantes
 
-- **Hosting:** migrado de Netlify → Vercel. Carpeta `netlify/` eliminada. `nodemailer` eliminado.
-- **Emails:** migrado de Nodemailer/SMTP → Resend SDK. Un solo archivo `api/cotizacion.js`.
-- **Formulario de cotización:** ya no persiste en Supabase ni en Netlify Forms — solo envía emails vía Resend.
-- **Supabase** sigue activo solo para `sendContactToSupabase` (widget de contacto en `index.html`).
+- **Hosting:** migrado de Netlify → Vercel. Carpeta `.netlify/` y todos los formularios ocultos de Netlify eliminados de los 3 HTMLs. `nodemailer` eliminado.
+- **Emails:** Resend SDK, `from: 'onboarding@resend.dev'`. Un solo archivo `api/cotizacion.js`. Sin try/catch por separado — un solo bloque.
+- **Supabase:** eliminado completamente de `main.js`. No hay `SUPABASE_URL`, ni `getSupabaseClient`, ni `sendContactToSupabase` en el código.
+- **Formulario de cotización:** no persiste en ningún servicio externo — solo envía emails vía Resend.
+- **Widget contacto:** el formulario HTML existe pero no envía a ningún servicio. Solo funciona el botón de cierre.
 - **Navbar glass:** `topbar--glass-strong` en los 4 HTMLs. Sin `::before` gradient.
 - `color-scheme: light` en inputs del wizard para forzar modo claro en controles nativos.
 - `.quote-backdrop` usa `position: fixed` para no desplazarse al hacer scroll dentro del modal.
-- Logo SVG: footer aplica `filter: brightness(0) invert(1)`. En emails se usa `<img>` con URL absoluta (SVG inline no renderiza en Gmail).
+- Logo SVG: footer aplica `filter: brightness(0) invert(1)`. En emails se usa `<img>` con URL absoluta.
 - Botones que abren cotización usan `.js-abrir-cotizacion`; el botón del hero usa adicionalmente `id="btn-cotizacion"`.
-- **Hero autoplay:** `setInterval(next, 5000)` sin flags ni pause-on-hover (fueron eliminados por bugs).
+- **Hero autoplay:** `setInterval(next, 5000)` sin flags ni pause-on-hover.
 - **Barritas slider:** `.dots` posicionado `bottom: 20px`. Botones 50×5px inactivo / 80×5px activo.
 
 ---
@@ -228,22 +249,21 @@ Recibe `POST` con todos los campos del wizard y envía **dos emails con Resend**
 ### Últimos commits
 | Commit | Descripción |
 |---|---|
+| `7cddaa4` | feat: reenvío de correos con Resend — empresa e ian y cliente |
+| `db28fda` | chore: eliminar archivos Netlify del proyecto |
+| `32803bf` | refactor: formulario limpio solo con lógica y UI, sin envíos externos |
 | `44ed6e2` | fix: try/catch separados para debug emails |
 | `d1ddb19` | fix: logo como img hosteada y correo cliente |
-| `32b8105` | feat: logo SVG en header de emails |
-| `f650e1f` | feat: agregar email de confirmación al cliente |
-| `9719a66` | fix: configurar vercel para sitio estático con funciones api |
 
 **Branch activo:** `main`
 **Repositorio:** `https://github.com/BlueShiit/mps-andamios`
-**Último deploy en Vercel:** commit `44ed6e2` — producción activa.
+**Último deploy en Vercel:** commit `7cddaa4` — producción activa.
 
 ### Pendiente / Por hacer
-- Verificar en Vercel Logs que ambos emails llegan correctamente al enviar el formulario
-- Verificar dominio `mps-andamios.cl` en Resend → cambiar `from` de `onboarding@resend.dev` a `noreply@mps-andamios.cl`
+- **BLOQUEANTE para emails al cliente:** verificar dominio `mps-andamios.cl` en Resend → cambiar `from` de `onboarding@resend.dev` a `noreply@mps-andamios.cl`. Sin esto, el email de confirmación al cliente no se entrega.
 - Reemplazar `href="#"` en íconos de redes sociales con URLs reales (Instagram, X, Facebook)
 - Subir PDF de documentación HSE → actualizar botón en `nosotros.html` (quitar `detail-link--soon`)
 - Agregar fotos reales al equipo en `nosotros.html` (actualmente usa SVG placeholder)
 - Agregar fotos reales de proyectos en `proyectos.html` (actualmente usa imágenes del hero)
-- Limpiar HTML residual del panel `.contact-panel` en `index.html`
+- Limpiar o reconectar el widget `.contact-panel` en `index.html` (actualmente no envía a ningún servicio)
 - Evaluar reconectar cotizaciones a Supabase si se necesita historial persistente
