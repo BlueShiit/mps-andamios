@@ -400,8 +400,8 @@ if (contactClose && contactPanel) {
   // ── Step 3 → 2 ──
   document.getElementById("qw-prev-3")?.addEventListener("click", () => goToStep(2));
 
-  // ── Submit — solo valida y muestra paso 4 ──
-  document.getElementById("qw-submit")?.addEventListener("click", () => {
+  // ── Submit — valida, envía a /api/cotizacion y muestra paso 4 ──
+  document.getElementById("qw-submit")?.addEventListener("click", async () => {
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     const empresa = inEmpresa?.value.trim()  || "";
     const nombre  = inNombre?.value.trim()   || "";
@@ -442,6 +442,53 @@ if (contactClose && contactPanel) {
 
     if (!ok) return;
 
+    const submitBtn = document.getElementById("qw-submit");
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Enviando…"; }
+
+    const c = calcularObra();
+    const tipoLabel = {
+      "montaje-desmontaje": "Montaje y desmontaje",
+      "solo-montaje":       "Solo montaje",
+      "solo-desmontaje":    "Solo desmontaje",
+      "supervision":        "Supervisión de obra",
+    }[st.tipoTrabajo] || st.tipoTrabajo;
+
+    const telefono = prefijo === "+56"
+      ? (/^569\d{8}$/.test(digits) ? digits : "56" + digits)
+      : prefijo.replace("+", "") + digits;
+
+    try {
+      await fetch("/api/cotizacion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sistema:           st.sistema === "blitz" ? "Blitz (fachada)" : "Allround (pesaje)",
+          tipo:              tipoLabel,
+          ancho:             parseFloat(inAncho?.value)   || 0,
+          alto:              parseFloat(inAlto?.value)    || 0,
+          fachadas:          st.fachadas,
+          kg:                parseFloat(inKg?.value)      || 0,
+          alturaMaxima:      st.sistema === "blitz"
+                               ? parseFloat(inAlto?.value)   || 0
+                               : parseFloat(inAltura?.value) || 0,
+          metodoIzaje:       c?.metodo   || "",
+          m2:                c?.m2       || 0,
+          dias:              (c?.diasM   || 0) + (c?.diasD || 0),
+          precioMontaje:     c?.precioM  || 0,
+          precioDesm:        c?.precioD  || 0,
+          total:             c?.total    || 0,
+          costoTrabajadores: c?.costoTrab || 0,
+          utilidad:          c?.utilidad  || 0,
+          recargo:           String(c?.recargo || 1),
+          empresa, nombre, cargo, telefono, correo, ciudad,
+          observaciones:     inObs?.value.trim() || "",
+        }),
+      });
+    } catch (e) {
+      console.error("Error fetch cotizacion:", e);
+    }
+
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Enviar cotización"; }
     goToStep(4);
   });
 
